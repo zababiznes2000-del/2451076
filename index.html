@@ -1,729 +1,155 @@
 <!DOCTYPE html>
-<html lang="pl" class="dark">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FITKUCHNIA - Oficjalna Aplikacja Kulinarna AI (Pobierz APK)</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            bg: '#080b09',
-                            card: '#121814',
-                            border: '#1b261f',
-                            neon: '#00FF66',
-                            neonHover: '#00cc52',
-                            darkGreen: '#042713',
-                            badgeBg: '#06381c',
-                            badgeText: '#34d399',
-                            muted: '#8e9d93',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
+    <title>FitKuchnia - Twoja Inteligentna Kuchnia</title>
     <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary: #00E676;
+            --primary-hover: #00C853;
+            --text: #ffffff;
+            --text-secondary: #b0bec5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            background-color: #080b09;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08) 0%, transparent 60%),
-                linear-gradient(to bottom, rgba(8, 11, 9, 0.9), #080b09);
+            background-color: var(--bg-color);
+            color: var(--text);
+            line-height: 1.6;
         }
 
-        .neon-border {
-            border: 1px solid rgba(0, 255, 102, 0.35);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.08);
+        header {
+            padding: 20px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
         }
 
-        .neon-border-glow {
-            border: 1px solid #00FF66;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.35);
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
         }
 
-        .btn-neon {
-            background-color: #00FF66;
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .btn-download {
+            display: inline-block;
+            background-color: var(--primary);
             color: #000000;
-            font-weight: 800;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
         }
 
-        .btn-neon:hover {
-            background-color: #00e65c;
+        .btn-download:hover {
+            background-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(0, 255, 102, 0.6);
         }
 
-        .phone-mockup-frame {
-            background: #0d120f;
-            border: 3px solid #1c2a20;
-            border-radius: 36px;
-            box-shadow: 0 25px 60px -15px rgba(0, 255, 102, 0.2);
+        .features {
+            padding: 60px 10%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .scroll-custom::-webkit-scrollbar {
-            width: 6px;
+        .card {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #2a2a2a;
+            transition: border-color 0.3s;
         }
-        .scroll-custom::-webkit-scrollbar-track {
-            background: #0d120f;
+
+        .card:hover {
+            border-color: var(--primary);
         }
-        .scroll-custom::-webkit-scrollbar-thumb {
-            background: #1c2a20;
-            border-radius: 4px;
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
         }
-        .scroll-custom::-webkit-scrollbar-thumb:hover {
-            background: #00FF66;
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a2a2a;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-brand-neon selection:text-black">
+<body>
 
-    <!-- Navigation -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-brand-bg/80 border-b border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black text-xl shadow-[0_0_12px_rgba(0,255,102,0.3)]">
-                    F
-                </div>
-                <div>
-                    <span class="text-2xl font-black tracking-wider text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-                    <span class="hidden sm:inline-block ml-2 text-xs font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded-full border border-brand-neon/30">v1.2 APK</span>
-                </div>
-            </div>
-
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-                <a href="#funkcje" class="hover:text-brand-neon transition-colors">Funkcje Aplikacji</a>
-                <a href="#podglad" class="hover:text-brand-neon transition-colors">Podgląd Screenów</a>
-                <a href="#aktualnosci" class="hover:text-brand-neon transition-colors">Aktualności</a>
-                <a href="#instrukcja" class="hover:text-brand-neon transition-colors">Instrukcja Instalacji</a>
-            </nav>
-
-            <div>
-                <a href="https://github.com/zababiznes2000-del/zababiznes2000-del/releases/download/v1.0/FitKuchnia.apk" download class="btn-neon px-5 py-2.5 rounded-xl text-sm inline-flex items-center space-x-2">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Pobierz APK</span>
-                </a>
-            </div>
-        </div>
+    <header>
+        <div class="logo">FitKuchnia</div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Hero Left Column -->
-                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
-                    
-                    <div class="inline-flex items-center space-x-2 bg-brand-card border border-brand-neon/40 px-4 py-2 rounded-full text-xs font-mono text-brand-neon">
-                        <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
-                        <span>CHMURA FIREBASE: AKTYWNA SYNCHRONIZACJA NA ŻYWO</span>
-                    </div>
+    <section class="hero">
+        <h1>Wszystko, czego potrzebujesz w jednym miejscu</h1>
+        <p>Aplikacja do zarządzania przepisami, wirtualną lodówką i zdrowszym stylem życia.</p>
+        <a href="fitkuchnia.apk" class="btn-download" download>Pobierz najnowszą wersję (APK)</a>
+    </section>
 
-                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
-                        Inteligentna Aplikacja Kulinarna <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon to-emerald-400">Nowej Generacji</span>
-                    </h1>
-
-                    <p class="text-lg text-brand-muted max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Gotuj mądrzej z asystentem AI. Łącz warianty przepisów, szukaj po zawartości swojej lodówki, przeliczaj makro na żywo i zbieraj <strong>Fit Punkty</strong>!
-                    </p>
-
-                    <!-- Main Download Box Card -->
-                    <div class="bg-brand-card p-6 sm:p-8 rounded-2xl neon-border-glow relative overflow-hidden text-left max-w-xl mx-auto lg:mx-0">
-                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-neon/10 rounded-full blur-2xl pointer-events-none"></div>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-2 text-white font-bold text-lg">
-                                    <i class="fa-brands fa-android text-brand-neon text-2xl"></i>
-                                    <span>FitKuchnia.apk</span>
-                                </div>
-                                <p class="text-xs text-brand-muted font-mono">
-                                    Wersja: 1.2 | Rozmiar: ~18.5 MB | Android 8.0+
-                                </p>
-                                <div class="flex items-center space-x-2 text-xs text-emerald-400">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span>Bezpieczna instalacja bezpośrednia</span>
-                                </div>
-                            </div>
-
-                            <a href="https://github.com/zababiznes2000-del/zababiznes2000-del/releases/download/v1.0/FitKuchnia.apk" download class="btn-neon text-center w-full sm:w-auto px-8 py-4 rounded-xl text-base flex items-center justify-center space-x-3 shrink-0">
-                                <i class="fa-solid fa-cloud-arrow-down text-xl"></i>
-                                <span>POBIERZ APK</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- App Badges Quick Bar -->
-                    <div class="pt-2 flex flex-wrap justify-center lg:justify-start gap-4 text-xs text-gray-300">
-                        <div class="flex items-center space-x-2 bg-brand-card px-3 py-1.5 rounded-lg border border-brand-border">
-                            <i class="fa-solid fa-shield-halved text-brand-neon"></i>
-                            <span>Brak Reklam</span>
-                        </div>
-                        <div class="flex items-center space-x-2 bg-brand-card px-3 py-1.5 rounded-lg border border-brand-border">
-                            <i class="fa-solid fa-bolt text-brand-neon"></i>
-                            <span>Silnik AI w Czasie Rzeczywistym</span>
-                        </div>
-                        <div class="flex items-center space-x-2 bg-brand-card px-3 py-1.5 rounded-lg border border-brand-border">
-                            <i class="fa-solid fa-fire text-brand-neon"></i>
-                            <span>Kalkulator Fit Punktów</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Hero Right Column: Interactive Phone Mockup -->
-                <div class="lg:col-span-5 flex justify-center">
-                    <div class="phone-mockup-frame w-full max-w-[360px] p-4 relative">
-                        <!-- Top Notch / Speaker bar -->
-                        <div class="w-32 h-4 bg-black rounded-full mx-auto mb-4 flex items-center justify-center space-x-2">
-                            <div class="w-3 h-3 rounded-full bg-neutral-900"></div>
-                            <div class="w-10 h-1 bg-neutral-800 rounded-full"></div>
-                        </div>
-
-                        <!-- Phone Screen Content -->
-                        <div class="bg-[#0a0d0a] rounded-[24px] p-4 border border-brand-border space-y-4 text-left font-sans text-xs min-h-[580px] flex flex-col justify-between">
-                            
-                            <!-- Header Inside App -->
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center text-gray-400 text-[10px] font-mono border-b border-brand-border/60 pb-2">
-                                    <span>13:09</span>
-                                    <span class="text-brand-neon"><i class="fa-solid fa-wifi"></i> 86% <i class="fa-solid fa-battery-full"></i></span>
-                                </div>
-
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h3 class="text-white font-black text-lg tracking-wider">FIT<span class="text-brand-neon">KUCHNIA</span></h3>
-                                        <p class="text-[10px] text-gray-400">1 przepisów w telefonie</p>
-                                    </div>
-                                    <div class="bg-brand-neon text-black px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center space-x-1">
-                                        <i class="fa-solid fa-plus"></i>
-                                        <span>Dodaj</span>
-                                    </div>
-                                </div>
-
-                                <!-- Admin Badge -->
-                                <div class="bg-brand-card border border-brand-neon/30 p-2 rounded-xl flex items-center space-x-2 text-[11px]">
-                                    <span class="w-2 h-2 rounded-full bg-brand-neon"></span>
-                                    <span class="text-gray-300 truncate">Konto: Super Admin (Właściciel)</span>
-                                    <span class="bg-brand-badgeBg text-brand-badgeText text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto">ADMIN</span>
-                                </div>
-                            </div>
-
-                            <!-- Recipe Card Mockup -->
-                            <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden space-y-2 p-2">
-                                <div class="relative h-28 rounded-xl overflow-hidden bg-neutral-900">
-                                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Przepis Siemię Lniane" class="w-full h-full object-cover">
-                                    <div class="absolute top-2 left-2 bg-black/80 text-brand-neon text-[9px] px-2 py-0.5 rounded-full font-bold">
-                                        <i class="fa-solid fa-camera"></i> Autorskie zdjęcie
-                                    </div>
-                                    <div class="absolute top-2 right-2 bg-brand-badgeBg/90 text-brand-badgeText text-[9px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/30">
-                                        <i class="fa-solid fa-circle-check"></i> Zatwierdzony
-                                    </div>
-                                    <div class="absolute bottom-2 right-2 bg-black/80 text-brand-neon text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/40">
-                                        💚 83 FIT
-                                    </div>
-                                </div>
-
-                                <div class="px-1 space-y-1">
-                                    <h4 class="font-bold text-white text-sm">Siemię Lniane</h4>
-                                    <p class="text-[10px] text-gray-400">Dobre na ból brzucha lub gardła, idealne na ciepło.</p>
-                                    
-                                    <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] font-mono">
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-brand-neon">●</span> Białko: 10g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-cyan-400">●</span> Tłuszcz: 12g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-amber-400">●</span> Węgle: 35g
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Interactive Screen Switcher Tabs inside Mockup -->
-                            <div class="bg-black/90 p-1.5 rounded-2xl border border-brand-border grid grid-cols-4 gap-1 text-center text-[10px]">
-                                <div class="bg-brand-darkGreen text-brand-neon p-2 rounded-xl font-bold flex flex-col items-center">
-                                    <i class="fa-solid fa-compass text-xs mb-0.5"></i>
-                                    <span>Odkrywaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-magnifying-glass text-xs mb-0.5"></i>
-                                    <span>Szukaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-cart-shopping text-xs mb-0.5"></i>
-                                    <span>Zakupy</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-user text-xs mb-0.5"></i>
-                                    <span>Profil</span>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+    <section class="features">
+        <div class="card">
+            <h3>Lodówka</h3>
+            <p>Sprawdzaj posiadane składniki, kontroluj terminy ważności i efektywnie zarządzaj zapasami żywności.</p>
+        </div>
+        <div class="card">
+            <h3>Asystent AI</h3>
+            <p>Generuj dopasowane przepisy kulinarne w oparciu o produkty, które masz pod ręką.</p>
+        </div>
+        <div class="card">
+            <h3>Fit Punkty</h3>
+            <p>Zdobywaj punkty za przygotowywanie posiłków i śledź swoje postępy.</p>
+        </div>
+        <div class="card">
+            <h3>Lista Zakupów</h3>
+            <p>Szybko twórz i edytuj listę zakupów na podstawie planowanych przepisów.</p>
         </div>
     </section>
 
-    <!-- Feature Grid Section -->
-    <section id="funkcje" class="py-20 bg-black/40 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-            
-            <div class="text-center space-y-4">
-                <span class="bg-brand-badgeBg text-brand-badgeText font-mono text-xs px-3 py-1 rounded-full border border-brand-neon/30 uppercase tracking-widest">
-                    Pojemne Moduły Aplikacji
-                </span>
-                <h2 class="text-3xl sm:text-5xl font-black text-white">
-                    Wszystko czego potrzebujesz w <span class="text-brand-neon">Jednym Miejscu</span>
-                </h2>
-                <p class="text-brand-muted max-w-2xl mx-auto text-sm sm:text-base">
-                    Aplikacja projektowana z myślą o maksymalnej wygodzie w kuchni. Od analizy AI po automatyczne listy zakupów.
-                </p>
-            </div>
+    <footer>
+        <p>&copy; 2026 FitKuchnia. Wszelkie prawa zastrzeżone.</p>
+    </footer>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                <!-- Feature 1: Firebase Cloud -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Wspólna Baza w Chmurze</h3>
-                            <span class="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">AKTYWNA</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Połączenie z Google Firebase. Nowe przepisy i zdjęcia są automatycznie synchronizowane na żywo ze wszystkimi Twoimi urządzeniami.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature 2: Zero Waste Lodówka -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-kitchen-set"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Moduł 1: Lodówka & Zero Waste</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AI SEARCH</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Wpisz składniki, które masz w domu (np. 'jajka i chleb') lub dolegliwość (np. 'boli mnie brzuch'). Silnik AI dopasuje optymalne danie z bazy!
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature 3: Bezlitosny Korektor AI -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Bezlitosny Korektor AI</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MODUŁ 4</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Zanim Twój przepis trafi do bazy, silnik AI sprawdzi luki logiczne, brakujące czasy, temperatury oraz absurdalne proporcje składników.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature 4: Fit Punkty & Prestiż -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Fit Punkty & Odznaki</h3>
-                            <span class="text-[10px] font-mono text-brand-neon bg-black px-2 py-0.5 rounded border border-brand-neon/30">83/100 FIT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Odblokowuj prestiżowe odznaki za zbilansowane dania. Zostań "Ekspertem Zero Waste" lub "Mistrzem Fit Punktów"!
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature 5: Planer Tygodniowy & Agregator -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-calendar-week"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Agregator Zakupów</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AUTOMAT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Planuj posiłki na cały tydzień (Pn-Nd). Aplikacja matematycznie sumuje powtarzające się składniki i przelicza jednostki na wagę w sklepie.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Feature 6: Tryb Brudne Ręce -->
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-stopwatch"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Tryb Brudne Ręce</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MINUTNIK</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Włącz aktywny minutnik jednym kliknięciem bez brudzenia ekranu w trakcie gotowania. Asystent poinformuje Cię o wymaganym czasie!
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Screenshot Showcase Section -->
-    <section id="podglad" class="py-20 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Prawdziwe Ekrany z Aplikacji</span>
-                    <h2 class="text-3xl sm:text-4xl font-black text-white mt-1">Zobacz jak prezentuje się interfejs</h2>
-                </div>
-                <div class="text-xs text-brand-muted font-mono">
-                    System Android | Ciemny Motyw OLED Premium
-                </div>
-            </div>
-
-            <!-- Tabbed Screenshots Gallery -->
-            <div class="bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-8 space-y-8">
-                
-                <!-- Gallery Navigation Pills -->
-                <div class="flex flex-wrap gap-2 border-b border-brand-border pb-4" id="gallery-tabs">
-                    <button onclick="switchTab('screen-lodowka')" id="btn-screen-lodowka" class="tab-btn active bg-brand-neon text-black font-bold px-4 py-2 rounded-xl text-xs transition-all">
-                        1. Wyszukiwarka & Lodówka
-                    </button>
-                    <button onclick="switchTab('screen-przepis')" id="btn-screen-przepis" class="tab-btn bg-neutral-900 text-gray-400 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition-all">
-                        2. Przepis & Kalkulator
-                    </button>
-                    <button onclick="switchTab('screen-profil')" id="btn-screen-profil" class="tab-btn bg-neutral-900 text-gray-400 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition-all">
-                        3. Profil Super Admina
-                    </button>
-                    <button onclick="switchTab('screen-planer')" id="btn-screen-planer" class="tab-btn bg-neutral-900 text-gray-400 hover:text-white font-bold px-4 py-2 rounded-xl text-xs transition-all">
-                        4. Planer Tygodniowy
-                    </button>
-                </div>
-
-                <!-- Tab Content 1: Lodówka -->
-                <div id="screen-lodowka" class="tab-content grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                    <div class="md:col-span-6 space-y-4">
-                        <div class="inline-block bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                            MODUŁ 1: LODÓWKA & DOLEGLIWOŚCI
-                        </div>
-                        <h3 class="text-2xl font-bold text-white">Szukaj po posiłku lub uratuj składniki (Zero Waste)</h3>
-                        <p class="text-sm text-brand-muted leading-relaxed">
-                            Wystarczy wpisać frazy takie jak <em>"mam jajka i chleb"</em>, <em>"ryż, groszek"</em> lub nawet podać dolegliwość <em>"boli mnie brzuch"</em>. Silnik AI wyszukuje optymalne danie wyłącznie ze zweryfikowanej bazy.
-                        </p>
-                        <div class="bg-black p-4 rounded-xl border border-brand-border font-mono text-xs text-gray-300 space-y-2">
-                            <div class="text-brand-neon">▸ Szybkie przykłady wyszukiwania:</div>
-                            <div class="flex flex-wrap gap-2 pt-1">
-                                <span class="bg-brand-card px-2.5 py-1 rounded border border-brand-border">mam jajka i chleb</span>
-                                <span class="bg-brand-card px-2.5 py-1 rounded border border-brand-border">boli mnie brzuch</span>
-                                <span class="bg-brand-card px-2.5 py-1 rounded border border-brand-border">ryż, jajka i groszek</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="md:col-span-6 flex justify-center">
-                        <div class="bg-black p-3 rounded-2xl border border-brand-neon/40 max-w-sm w-full shadow-2xl">
-                            <div class="bg-brand-card p-4 rounded-xl space-y-3 font-sans">
-                                <div class="text-brand-neon font-bold text-xs">WYSZUKIWARKA & LODÓWKA</div>
-                                <div class="bg-black p-3 rounded-xl border border-brand-neon text-xs text-gray-400">
-                                    np. jajka, chleb lub boli mnie brzuch...
-                                </div>
-                                <div class="btn-neon text-center py-2.5 rounded-xl font-bold text-xs cursor-pointer">
-                                    🔍 Dopasuj danie z bazy
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab Content 2: Przepis -->
-                <div id="screen-przepis" class="tab-content hidden grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                    <div class="md:col-span-6 space-y-4">
-                        <div class="inline-block bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                            PRZELICZNIK PORCJI & MIKRO
-                        </div>
-                        <h3 class="text-2xl font-bold text-white">Dynamiczne skalowanie proporcji składników</h3>
-                        <p class="text-sm text-brand-muted leading-relaxed">
-                            Aplikacja wylicza idealną ocenę odżywczą (np. 83/100 Fit Punktów). Zmień liczbę porcji jednym przyciskiem, a gramatura wody, siemienia czy innych składników zmieni się natychmiast!
-                        </p>
-                        <div class="flex items-center space-x-4 text-xs font-mono text-emerald-400">
-                            <span><i class="fa-solid fa-clock"></i> 5 min</span>
-                            <span><i class="fa-solid fa-fire"></i> 324 kcal / porcja</span>
-                            <span class="text-brand-neon font-bold">💚 83/100 FIT</span>
-                        </div>
-                    </div>
-                    <div class="md:col-span-6 flex justify-center">
-                        <div class="bg-black p-3 rounded-2xl border border-brand-neon/40 max-w-sm w-full shadow-2xl space-y-2">
-                            <div class="bg-brand-card p-3 rounded-xl space-y-2 text-xs">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-white font-bold">Liczba porcji</span>
-                                    <div class="flex items-center space-x-2 bg-black border border-brand-neon px-2 py-1 rounded-lg text-brand-neon font-bold">
-                                        <span>-</span> <span class="text-white px-2">4</span> <span>+</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-<div class="bg-brand-neon text-black font-bold p-2 rounded-lg text-center">
-                        🎤 Tryb Brudne Ręce
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tab Content 3: Profil -->
-    <div id="screen-profil" class="tab-content hidden grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-        <div class="md:col-span-6 space-y-4">
-            <div class="inline-block bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                SYSTEM PRESTIŻU & ADMIN
-            </div>
-            <h3 class="text-2xl font-bold text-white">Rangi, odznaki i kontrola autorska</h3>
-            <p class="text-sm text-brand-muted leading-relaxed">
-                Zbieraj odznaki takie jak <strong>Ekspert Zero Waste</strong> za tworzenie dań ratunkowych z resztek z lodówki lub <strong>Mistrz Fit Punktów</strong> za idealną gęstość odżywczą.
-            </p>
-        </div>
-        <div class="md:col-span-6 flex justify-center">
-            <div class="bg-black p-3 rounded-2xl border border-brand-neon/40 max-w-sm w-full shadow-2xl">
-                <div class="bg-brand-card p-4 rounded-xl space-y-2 text-xs">
-                    <div class="text-brand-neon font-bold">Super Admin (Właściciel)</div>
-                    <div class="grid grid-cols-3 gap-2 pt-2 text-[10px] text-center font-mono">
-                        <div class="bg-black p-2 rounded border border-brand-border">
-                            <div class="text-brand-neon font-bold text-sm">92/100</div>
-                            <div class="text-gray-400">Średnia FIT</div>
-                        </div>
-                        <div class="bg-black p-2 rounded border border-brand-border">
-                            <div class="text-white font-bold text-sm">1 dań</div>
-                            <div class="text-gray-400">Przepisy</div>
-                        </div>
-                        <div class="bg-black p-2 rounded border border-brand-border">
-                            <div class="text-brand-neon font-bold text-sm">ADMIN</div>
-                            <div class="text-gray-400">Status</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tab Content 4: Planer -->
-    <div id="screen-planer" class="tab-content hidden grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-        <div class="md:col-span-6 space-y-4">
-            <div class="inline-block bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                PLANER & AGREGACJA ZAKUPÓW
-            </div>
-            <h3 class="text-2xl font-bold text-white">Inteligentny Agregator Składników</h3>
-            <p class="text-sm text-brand-muted leading-relaxed">
-                Moduł 4 matematycznie łączy powtarzające się składniki ze wszystkich dni tygodnia (Pn-Nd) i przelicza je na zbiorczą listę zakupów.
-            </p>
-        </div>
-        <div class="md:col-span-6 flex justify-center">
-            <div class="bg-black p-3 rounded-2xl border border-brand-neon/40 max-w-sm w-full shadow-2xl">
-                <div class="bg-brand-card p-4 rounded-xl space-y-2 text-xs">
-                    <div class="text-white font-bold">Planer Tygodniowy (Pn-Nd)</div>
-                    <div class="flex gap-1 py-1">
-                        <span class="bg-brand-neon text-black font-bold px-2 py-1 rounded">Pn</span>
-                        <span class="bg-black text-gray-400 px-2 py-1 rounded">Wt</span>
-                        <span class="bg-black text-gray-400 px-2 py-1 rounded">Śr</span>
-                        <span class="bg-black text-gray-400 px-2 py-1 rounded">Czw</span>
-                    </div>
-                    <div class="text-[10px] text-gray-400 pt-2">🛒 Automatyczna agregacja w toku...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-
-<!-- Aktualności & Wersja APK -->
-<section id="aktualnosci" class="py-16 bg-black/50 border-t border-brand-border">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-brand-card rounded-3xl p-8 border-l-4 border-l-brand-neon border-y border-r border-brand-border space-y-6">
-            
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="space-y-1">
-                    <span class="bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                        Ostatnia Aktualizacja Pliku APK
-                    </span>
-                    <h3 class="text-2xl font-bold text-white mt-2">Czy musisz pobierać nowe APK?</h3>
-                </div>
-                <a href="https://github.com/zababiznes2000-del/zababiznes2000-del/releases/download/v1.0/FitKuchnia.apk" download class="btn-neon px-6 py-3 rounded-xl text-xs font-bold shrink-0 text-center">
-                    Pobierz Wersję v1.2
-                </a>
-            </div>
-
-            <div class="text-sm text-brand-muted space-y-3 leading-relaxed">
-                <p>
-                    Jeśli posiadasz wcześniejszą wersję aplikacji niż <strong class="text-white">v1.2</strong>, zalecamy pobranie nowego pliku APK powyżej.
-                </p>
-                <ul class="list-disc list-inside space-y-1 text-xs font-mono text-gray-300">
-                    <li>Dodano natywną synchronizację w tle z Firebase Cloud</li>
-                    <li>Poprawiono czułość wyszukiwania w Module Lodówka Zero Waste</li>
-                    <li>Zaktualizowano silnik sprawdzania proporcji w Bezlitosnym Korektorze AI</li>
-                </ul>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- Instrukcja Instalacji APK -->
-<section id="instrukcja" class="py-20 border-t border-brand-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        <div class="text-center space-y-3">
-            <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Szybki Start</span>
-            <h2 class="text-3xl sm:text-4xl font-black text-white">Jak zainstalować aplikację na telefonie?</h2>
-            <p class="text-brand-muted max-w-xl mx-auto text-sm">
-                Prosty proces instalacji z pliku APK dla systemów Android w 4 łatwych krokach.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            <!-- Step 1 -->
-            <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">
-                    1
-                </div>
-                <h3 class="text-base font-bold text-white">Pobierz plik APK</h3>
-                <p class="text-xs text-brand-muted leading-relaxed">
-                    Kliknij zielony przycisk <strong>Pobierz FitKuchnia.apk</strong> u góry lub u dołu strony.
-                </p>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">
-                    2
-                </div>
-                <h3 class="text-base font-bold text-white">Otwórz Pobrane</h3>
-                <p class="text-xs text-brand-muted leading-relaxed">
-                    Rozwiń pasek powiadomień na telefonie lub przejdź do folderu Pobrane (Downloads) i kliknij w plik `fitkuchnia.apk`.
-                </p>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">
-                    3
-                </div>
-                <h3 class="text-base font-bold text-white">Zezwól na instalację</h3>
-                <p class="text-xs text-brand-muted leading-relaxed">
-                    Jeśli Android wyświetli komunikat ostrzegawczy, wybierz <em>Ustawienia</em> i włącz opcję <em>Zezwól z tego źródła</em>.
-                </p>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">
-                    4
-                </div>
-                <h3 class="text-base font-bold text-white">Zainstaluj i Korzystaj</h3>
-                <p class="text-xs text-brand-muted leading-relaxed">
-                    Kliknij <strong>Zainstaluj</strong>. Po zakończeniu otwórz aplikację i ciesz się inteligentnym asystentem kulinarnym!
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-</section>
-
-<!-- Final CTA Footer -->
-<footer class="bg-black border-t border-brand-border py-12 text-center text-xs text-brand-muted">
-    <div class="max-w-4xl mx-auto px-4 space-y-6">
-        <div class="flex items-center justify-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black">
-                F
-            </div>
-            <span class="text-xl font-black text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-        </div>
-
-        <p class="max-w-md mx-auto">
-            Twój inteligentny asystent w kuchni. Wszystkie dane bezpiecznie synchronizowane w chmurze Firebase.
-        </p>
-
-        <div class="pt-4 border-t border-brand-border/40 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div>
-                &copy; 2026 FitKuchnia App. Hosted on GitHub Pages.
-            </div>
-            <div class="flex space-x-4">
-                <a href="https://github.com/zababiznes2000-del/zababiznes2000-del/releases/download/v1.0/FitKuchnia.apk" download class="text-brand-neon hover:underline font-bold">Pobierz fitkuchnia.apk</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- Tab Switcher Script -->
-<script>
-    function switchTab(tabId) {
-        // Hide all tab contents
-        const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(content => content.classList.add('hidden'));
-
-        // Reset all tab button styles
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => {
-            btn.classList.remove('bg-brand-neon', 'text-black');
-            btn.classList.add('bg-neutral-900', 'text-gray-400');
-        });
-
-        // Show current tab content
-        const activeContent = document.getElementById(tabId);
-        if (activeContent) {
-            activeContent.classList.remove('hidden');
-        }
-
-        // Highlight current active button
-        const activeBtn = document.getElementById('btn-' + tabId);
-        if (activeBtn) {
-            activeBtn.classList.remove('bg-neutral-900', 'text-gray-400');
-            activeBtn.classList.add('bg-brand-neon', 'text-black');
-        }
-    }
-</script>
 </body>
 </html>
