@@ -107,6 +107,88 @@
             color: var(--text-secondary);
         }
 
+        .section-container {
+            padding: 40px 10%;
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+        }
+
+        .section-container h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #2a2a2a;
+            padding-bottom: 10px;
+        }
+
+        .changelog-card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .changelog-card h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .changelog-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .changelog-card li {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .changelog-card li::before {
+            content: "✓";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .bug-form {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #121212;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
         footer {
             text-align: center;
             padding: 30px;
@@ -145,6 +227,45 @@
             <h3>Lista Zakupów</h3>
             <p>Szybko twórz i edytuj listę zakupów na podstawie planowanych przepisów.</p>
         </div>
+    </section>
+
+    <!-- Sekcja: Co się zmieniło / Naprawione błędy -->
+    <section class="section-container">
+        <h2>Co nowego i naprawione błędy</h2>
+        <div class="changelog-card">
+            <h3>Wersja 1.0.1 - Najnowsze poprawki:</h3>
+            <ul>
+                <li>Zoptymalizowano połączenie i synchronizację z bazą Firebase.</li>
+                <li>Poprawiono naliczanie Fit Punktów po zrealizowaniu przepisu.</li>
+                <li>Naprawiono błąd wyświetlania składników w widoku Lodówki.</li>
+                <li>Usprawniono stabilność aplikacji i poprawiono płynność interfejsu.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Sekcja: Zgłaszanie błędów przez użytkowników -->
+    <section class="section-container">
+        <h2>Zgłoś znaleziony błąd</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">
+            Znalazłeś usterkę w aplikacji? Opisz ją poniżej, aby pomóc w rozwoju FitKuchni!
+        </p>
+        
+        <form class="bug-form" action="https://formsubmit.co/zababiznes2000@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="FitKuchnia - Nowe zgłoszenie błędu!">
+            <input type="hidden" name="_captcha" value="false">
+
+            <div class="form-group">
+                <label for="email">Twój adres e-mail (opcjonalnie):</label>
+                <input type="email" id="email" name="email" placeholder="np. jan@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="bug">Opis błędu:*</label>
+                <textarea id="bug" name="opis_bledu" rows="5" required placeholder="Opisz dokładnie, co poszło nie tak..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-download" style="border: none; cursor: pointer;">Wyślij zgłoszenie</button>
+        </form>
     </section>
 
     <footer>
