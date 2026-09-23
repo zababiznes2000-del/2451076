@@ -468,16 +468,16 @@
             <div>
               <div class="eyebrow">Kontakt</div>
               <h2>Wyślij opinię albo zgłoś błąd.</h2>
-              <p>Wiadomość zostanie zapisana lokalnie w tej przeglądarce i pojawi się w panelu administracyjnym.</p>
+              <p>Wiadomość zostanie wysłana do Cloud Firestore i pojawi się w panelu administracyjnym.</p>
             </div>
           </div>
           <div class="feedback-grid">
             <article class="card feedback-copy">
               <span class="badge">85/100 FIT</span>
               <h3 style="font-size:1.45rem;margin-top:18px">Pomóż rozwijać FitKuchnię.</h3>
-              <p>Opisz problem, zaproponuj zmianę albo oceń aktualną wersję. Formularz działa bez dodatkowego backendu.</p>
+              <p>Opisz problem, zaproponuj zmianę albo oceń aktualną wersję. Zgłoszenie trafia bezpośrednio do chmury Firebase.</p>
               <div class="small-stat">
-                <span class="badge neutral" id="feedbackCountPublic">0 zapisanych lokalnie</span>
+                <span class="badge neutral" id="feedbackCountPublic">0 zgłoszeń w chmurze</span>
                 <span class="badge neutral">v<span id="feedbackVersionPublic">3.2</span></span>
               </div>
             </article>
@@ -495,7 +495,7 @@
                 </div></div>
                 <div class="field full"><label for="feedbackMessage">Treść wiadomości *</label><textarea id="feedbackMessage" name="message" required maxlength="2500" placeholder="Napisz, co działa dobrze albo co warto poprawić..."></textarea></div>
               </div>
-              <div class="form-actions"><span class="form-message" id="feedbackFormMessage">Wiadomość zostanie zapisana lokalnie.</span><button class="primary-btn" type="submit">Wyślij wiadomość</button></div>
+              <div class="form-actions"><span class="form-message" id="feedbackFormMessage">Wiadomość zostanie wysłana do chmury Firebase.</span><button class="primary-btn" type="submit">Wyślij wiadomość</button></div>
             </form>
           </div>
         </div>
@@ -526,11 +526,11 @@
         <div class="admin-layout">
           <section class="card admin-card">
             <h3>Wgraj nową wersję aplikacji</h3>
-            <p>Metadata i changelog są przechowywane w localStorage, a sam plik APK w IndexedDB.</p>
+            <p>Plik APK jest przechowywany w Firebase Storage, a wersja i dziennik zmian w Cloud Firestore. Publikacja jest widoczna globalnie.</p>
 
             <div class="field">
               <label for="adminPassword">Hasło administratora *</label>
-              <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Domyślnie: 1234">
+              <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Kod administratora">
             </div>
 
             <div style="height:11px"></div>
@@ -539,7 +539,7 @@
               <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-controls="apkFile">
                 <div class="cloud" aria-hidden="true">☁</div>
                 <strong>Przeciągnij plik .apk tutaj lub kliknij, aby wybrać</strong>
-                <small>Plik zostanie zapisany lokalnie w pamięci tej przeglądarki.</small>
+                <small>Plik zostanie wysłany do Firebase Storage dopiero po autoryzacji kodem administratora.</small>
                 <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" class="sr-only">
               </div>
               <div class="file-preview hidden" id="filePreview"><div><strong id="selectedFileName">—</strong><div class="muted" id="selectedFileSize">—</div></div><button class="ghost-btn" id="clearSelectedFile" type="button">Usuń wybór</button></div>
@@ -559,14 +559,14 @@
 
             <div class="admin-actions">
               <button class="primary-btn" id="publishBtn" type="button">Opublikuj / Zapisz zmiany</button>
-              <button class="ghost-btn" id="resetSettingsBtn" type="button">Przywróć wersję domyślną</button>
+              <button class="ghost-btn" id="resetSettingsBtn" type="button">Odśwież dane z serwera</button>
             </div>
             <div class="status-line"><span class="status-dot"></span><span id="adminStatus">Gotowe.</span></div>
           </section>
 
           <aside class="card admin-card">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-              <div><h3>Aktualna publikacja</h3><p style="margin-bottom:0">Stan widoczny dla użytkowników tej przeglądarki.</p></div>
+              <div><h3>Aktualna publikacja</h3><p style="margin-bottom:0">Stan publikacji zapisany centralnie w Firebase.</p></div>
               <span class="badge" id="adminCurrentVersion">v3.2</span>
             </div>
             <div class="version-strip" style="margin-top:17px;display:grid;grid-template-columns:1fr 1fr">
@@ -576,12 +576,12 @@
               <div><span class="muted">Opinie</span><br><strong id="adminCurrentFeedback">0</strong></div>
             </div>
             <div class="admin-actions">
-              <button class="ghost-btn danger" id="deleteApkBtn" type="button">Usuń zapisany APK</button>
+              <button class="ghost-btn danger" id="deleteApkBtn" type="button">Usuń opublikowany APK</button>
             </div>
 
             <div class="admin-divider"></div>
             <h3>Odebrane opinie i zgłoszenia</h3>
-            <p>Rekordy pochodzą z localStorage tej przeglądarki.</p>
+            <p>Rekordy są pobierane bezpośrednio z Cloud Firestore i są wspólne dla administratora oraz wszystkich użytkowników.</p>
             <div class="admin-actions" style="margin-top:0"><button class="ghost-btn danger" id="clearFeedbackBtn" type="button">Usuń wszystkie</button></div>
             <div class="feedback-list" id="adminFeedbackList" style="margin-top:12px"></div>
           </aside>
@@ -592,17 +592,45 @@
 
   <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
 
-  <script>
-    (function(){
+  <script type="module">
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      deleteDoc,
+      addDoc,
+      getDocs,
+      writeBatch,
+      collection,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytes,
+      getDownloadURL,
+      deleteObject
+    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+
+    (async function(){
       'use strict';
 
-      const STORAGE_KEY = 'fitkuchnia-settings-v1';
-      const FEEDBACK_KEY = 'fitkuchnia-feedback-v1';
+      const ADMIN_CODE = 'sonmhc-ex5';
+      const RELEASE_DOC = ['fitkuchnia', 'release'];
+      const FEEDBACK_COLLECTION = 'fitkuchnia_feedback';
+
       const DEFAULTS = {
         version: '3.2',
         android: '8.0+',
         fileName: 'FitKuchnia.apk',
-        size: '',
+        size: '—',
+        storagePath: '',
+        downloadURL: '',
         newChanges: [
           'Nowoczesny panel aktualizacji APK',
           'Odświeżony interfejs FitKuchnia',
@@ -610,414 +638,677 @@
         ],
         fixedChanges: [
           'Poprawione drobne problemy z nawigacją',
-          'Stabilniejsze zapisywanie ustawień lokalnych',
+          'Stabilniejsze działanie aplikacji',
           'Poprawiona responsywność formularzy'
         ]
       };
 
-      let currentSettings = loadSettings();
+      /*
+       * The public Firebase web config is not a secret, but it is required to
+       * connect a browser to the correct Firebase project.
+       *
+       * Priority:
+       * 1) Firebase Hosting auto config at /__/firebase/init.json
+       * 2) Optional window.FIREBASE_CONFIG injection by the host
+       * 3) Values below
+       *
+       * Put the Web App config from Firebase Console here once for GitHub Pages
+       * or Vercel if /__/firebase/init.json is not available on your host.
+       */
+      const EMBEDDED_FIREBASE_CONFIG = {
+        apiKey: '',
+        authDomain: '',
+        projectId: '',
+        storageBucket: '',
+        messagingSenderId: '',
+        appId: ''
+      };
+
+      let currentSettings = structuredClone(DEFAULTS);
       let selectedFile = null;
-      let objectUrl = null;
-      let dbPromise = null;
+      let adminUnlocked = false;
+      let unsubscribeRelease = null;
+      let unsubscribeFeedback = null;
+      let firebaseReady = false;
+      let db = null;
+      let storage = null;
 
       const $ = (sel, root=document) => root.querySelector(sel);
       const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
 
-      function loadSettings(){
-        try{
-          const raw = localStorage.getItem(STORAGE_KEY);
-          return raw ? {...DEFAULTS, ...JSON.parse(raw)} : structuredClone(DEFAULTS);
-        }catch(e){
-          return structuredClone(DEFAULTS);
-        }
-      }
-
-      function saveSettings(){
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSettings));
-      }
-
-      function getFeedback(){
-        try{return JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]')}catch(e){return []}
-      }
-
-      function saveFeedback(list){
-        localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
-      }
-
       function formatBytes(bytes){
-        if(!bytes && bytes !== 0) return '—';
-        if(bytes === 0) return '0 B';
-        const units=['B','KB','MB','GB'];
-        const i=Math.floor(Math.log(bytes)/Math.log(1024));
-        return `${(bytes/Math.pow(1024,i)).toFixed(i ? 2 : 0)} ${units[i]}`;
+        if(bytes === undefined || bytes === null || Number.isNaN(Number(bytes))) return '—';
+        const value = Number(bytes);
+        if(value === 0) return '0 B';
+        const units = ['B','KB','MB','GB','TB'];
+        const index = Math.min(Math.floor(Math.log(value) / Math.log(1024)), units.length - 1);
+        return `${(value / Math.pow(1024, index)).toFixed(index ? 2 : 0)} ${units[index]}`;
       }
 
       function showToast(message, type='success'){
-        const el=document.createElement('div');
-        el.className='toast ' + type;
-        el.textContent=message;
+        const el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = message;
         $('#toastWrap').appendChild(el);
-        setTimeout(()=>el.remove(), 3600);
+        setTimeout(() => el.remove(), 3600);
+      }
+
+      function safeArray(value, fallback=[]){
+        return Array.isArray(value) && value.length ? value.filter(Boolean) : fallback;
+      }
+
+      function setFirebaseUiStatus(message, isError=false){
+        const status = $('#adminStatus');
+        if(status) status.textContent = message;
+        const publicStatus = $('#downloadStatus');
+        if(publicStatus && isError) publicStatus.textContent = message;
+      }
+
+      async function resolveFirebaseConfig(){
+        try{
+          const response = await fetch('/__/firebase/init.json', {
+            method: 'GET',
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+          });
+          if(response.ok){
+            const data = await response.json();
+            if(data && data.projectId) return data;
+          }
+        }catch(_){ /* Not on Firebase Hosting or endpoint unavailable. */ }
+
+        if(window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.projectId){
+          return window.FIREBASE_CONFIG;
+        }
+
+        if(EMBEDDED_FIREBASE_CONFIG.projectId){
+          return EMBEDDED_FIREBASE_CONFIG;
+        }
+
+        return null;
+      }
+
+      async function initFirebase(){
+        const config = await resolveFirebaseConfig();
+        if(!config){
+          firebaseReady = false;
+          $('#downloadStatus').textContent = 'Firebase nie jest skonfigurowany — ustaw konfigurację Web App w pliku lub hostingu.';
+          $('#adminStatus').textContent = 'Brak konfiguracji Firebase.';
+          showToast('Brak konfiguracji Firebase dla tej strony.', 'error');
+          return false;
+        }
+
+        try{
+          const app = getApps().length ? getApps()[0] : initializeApp(config);
+          db = getFirestore(app);
+          storage = getStorage(app);
+          firebaseReady = true;
+          $('#adminStatus').textContent = `Firebase: połączono z projektem ${config.projectId}.`;
+          return true;
+        }catch(error){
+          console.error(error);
+          firebaseReady = false;
+          $('#downloadStatus').textContent = 'Nie udało się połączyć z Firebase.';
+          $('#adminStatus').textContent = 'Błąd połączenia z Firebase.';
+          showToast('Nie udało się uruchomić Firebase.', 'error');
+          return false;
+        }
+      }
+
+      function releaseRef(){
+        return doc(db, ...RELEASE_DOC);
+      }
+
+      async function loadReleaseOnce(){
+        if(!firebaseReady) return;
+        const snap = await getDoc(releaseRef());
+        if(snap.exists()){
+          currentSettings = {
+            ...DEFAULTS,
+            ...snap.data(),
+            newChanges: safeArray(snap.data().newChanges, DEFAULTS.newChanges),
+            fixedChanges: safeArray(snap.data().fixedChanges, DEFAULTS.fixedChanges)
+          };
+        }else{
+          currentSettings = structuredClone(DEFAULTS);
+        }
+        renderPublic();
+        renderAdmin();
+      }
+
+      function listenForRelease(){
+        if(!firebaseReady) return;
+        if(unsubscribeRelease) unsubscribeRelease();
+        unsubscribeRelease = onSnapshot(
+          releaseRef(),
+          snap => {
+            if(snap.exists()){
+              const data = snap.data();
+              currentSettings = {
+                ...DEFAULTS,
+                ...data,
+                newChanges: safeArray(data.newChanges, DEFAULTS.newChanges),
+                fixedChanges: safeArray(data.fixedChanges, DEFAULTS.fixedChanges)
+              };
+            }else{
+              currentSettings = structuredClone(DEFAULTS);
+            }
+            renderPublic();
+            renderAdmin();
+            updateDownloadLinks();
+          },
+          error => {
+            console.error(error);
+            setFirebaseUiStatus('Brak dostępu do danych publikacji Firebase.', true);
+          }
+        );
       }
 
       function setDownloadState(hasApk, url, fileName){
-        $$('[data-apk-link]').forEach(link=>{
+        $$('[data-apk-link]').forEach(link => {
           if(hasApk){
-            link.href=url;
-            link.download=fileName || 'FitKuchnia.apk';
+            link.href = url;
+            link.download = fileName || 'FitKuchnia.apk';
             link.classList.remove('disabled-link');
             link.removeAttribute('aria-disabled');
-            link.dataset.ready='1';
+            link.dataset.ready = '1';
           }else{
-            link.href='#';
+            link.href = '#';
             link.removeAttribute('download');
             link.classList.add('disabled-link');
-            link.setAttribute('aria-disabled','true');
-            link.dataset.ready='0';
+            link.setAttribute('aria-disabled', 'true');
+            link.dataset.ready = '0';
           }
         });
+
         $('#downloadStatus').textContent = hasApk
-          ? `Aktywny plik: ${fileName || 'FitKuchnia.apk'} — gotowy do pobrania.`
-          : 'Brak pliku APK — wgraj wersję w panelu Administracja.';
+          ? `Aktywny plik: ${fileName || 'FitKuchnia.apk'} — gotowy do pobrania z Firebase.`
+          : 'Brak opublikowanego APK w Firebase.';
+      }
+
+      function updateDownloadLinks(){
+        const url = currentSettings.downloadURL || '';
+        const name = currentSettings.fileName || 'FitKuchnia.apk';
+        setDownloadState(Boolean(url), url, name);
       }
 
       function renderChangeList(target, items, fallback){
-        const ul=$(target);
-        ul.innerHTML='';
-        const list=(Array.isArray(items)&&items.length?items:fallback).filter(Boolean);
-        list.forEach(text=>{
-          const li=document.createElement('li');
-          li.textContent=text;
+        const ul = $(target);
+        ul.innerHTML = '';
+        const list = safeArray(items, fallback);
+        list.forEach(text => {
+          const li = document.createElement('li');
+          li.textContent = text;
           ul.appendChild(li);
         });
       }
 
       function renderPublic(){
-        const s=currentSettings;
-        const version=s.version || DEFAULTS.version;
-        const android=s.android || DEFAULTS.android;
-        const fileName=s.fileName || DEFAULTS.fileName;
-        const size=s.size || '—';
+        const s = currentSettings;
+        const version = s.version || DEFAULTS.version;
+        const android = s.android || DEFAULTS.android;
+        const fileName = s.fileName || DEFAULTS.fileName;
+        const size = s.size || '—';
 
-        $('#heroVersionBadge').textContent='v'+version;
-        $('#appCardBadge').textContent='v'+version;
-        $('#changeVersionBadge').textContent='v'+version;
-        $('#cardVersion').textContent=version;
-        $('#stripVersion').textContent=version;
-        $('#heroAndroid').textContent=android;
-        $('#cardAndroid').textContent=android;
-        $('#stripAndroid').textContent=android;
-        $('#heroFileName').textContent=fileName;
-        $('#cardFileName').textContent=fileName;
-        $('#stripFile').textContent=fileName;
-        $('#heroFileSize').textContent=size;
-        $('#cardSize').textContent=size;
-        $('#feedbackVersionPublic').textContent=version;
+        $('#heroVersionBadge').textContent = 'v' + version;
+        $('#appCardBadge').textContent = 'v' + version;
+        $('#changeVersionBadge').textContent = 'v' + version;
+        $('#cardVersion').textContent = version;
+        $('#stripVersion').textContent = version;
+        $('#heroAndroid').textContent = android;
+        $('#cardAndroid').textContent = android;
+        $('#stripAndroid').textContent = android;
+        $('#heroFileName').textContent = fileName;
+        $('#cardFileName').textContent = fileName;
+        $('#stripFile').textContent = fileName;
+        $('#heroFileSize').textContent = size;
+        $('#cardSize').textContent = size;
+        $('#feedbackVersionPublic').textContent = version;
 
-        renderChangeList('#newChangesList',s.newChanges,DEFAULTS.newChanges);
-        renderChangeList('#fixedChangesList',s.fixedChanges,DEFAULTS.fixedChanges);
+        renderChangeList('#newChangesList', s.newChanges, DEFAULTS.newChanges);
+        renderChangeList('#fixedChangesList', s.fixedChanges, DEFAULTS.fixedChanges);
 
-        const feedbackCount=getFeedback().length;
-        $('#feedbackCountPublic').textContent=`${feedbackCount} zapisanych lokalnie`;
+        if(!s.downloadURL && firebaseReady){
+          $('#downloadStatus').textContent = 'Brak opublikowanego APK w Firebase.';
+        }
       }
 
       function renderAdmin(){
-        const s=currentSettings;
-        $('#adminVersion').value=s.version || DEFAULTS.version;
-        $('#adminAndroid').value=s.android || DEFAULTS.android;
-        $('#adminNewChanges').value=(s.newChanges || []).join('\n');
-        $('#adminFixedChanges').value=(s.fixedChanges || []).join('\n');
-        $('#adminCurrentVersion').textContent='v'+(s.version || DEFAULTS.version);
-        $('#adminCurrentFile').textContent=s.fileName || 'Brak pliku';
-        $('#adminCurrentSize').textContent=s.size || '—';
-        $('#adminCurrentAndroid').textContent=s.android || DEFAULTS.android;
-        const count=getFeedback().length;
-        $('#adminCurrentFeedback').textContent=count;
-        renderFeedbackAdmin();
+        const s = currentSettings;
+        $('#adminVersion').value = s.version || DEFAULTS.version;
+        $('#adminAndroid').value = s.android || DEFAULTS.android;
+        $('#adminNewChanges').value = (s.newChanges || []).join('\n');
+        $('#adminFixedChanges').value = (s.fixedChanges || []).join('\n');
+        $('#adminCurrentVersion').textContent = 'v' + (s.version || DEFAULTS.version);
+        $('#adminCurrentFile').textContent = s.fileName || 'Brak pliku';
+        $('#adminCurrentSize').textContent = s.size || '—';
+        $('#adminCurrentAndroid').textContent = s.android || DEFAULTS.android;
+        $('#adminCurrentFeedback').textContent = '—';
       }
 
-      function renderFeedbackAdmin(){
-        const list=getFeedback();
-        const host=$('#adminFeedbackList');
-        host.innerHTML='';
-        if(!list.length){
-          host.innerHTML='<div class="empty-state">Brak zapisanych wiadomości.</div>';
+      function escapeHtml(str){
+        return String(str ?? '').replace(/[&<>'"]/g, c => ({
+          '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'
+        }[c]));
+      }
+
+      function updateSelectedFilePreview(){
+        const preview = $('#filePreview');
+        if(!selectedFile){
+          preview.classList.add('hidden');
           return;
         }
-        [...list].reverse().forEach(item=>{
-          const card=document.createElement('article');
-          card.className='feedback-item';
-          const stars='★'.repeat(Number(item.rating)||0)+'☆'.repeat(5-(Number(item.rating)||0));
-          card.innerHTML=`
+        $('#selectedFileName').textContent = selectedFile.name;
+        $('#selectedFileSize').textContent = formatBytes(selectedFile.size);
+        preview.classList.remove('hidden');
+      }
+
+      function selectFile(file){
+        if(!adminUnlocked){
+          showToast('Najpierw wpisz poprawny kod administratora.', 'error');
+          return;
+        }
+        if(!file) return;
+        if(!/\.apk$/i.test(file.name)){
+          showToast('Wybierz plik z rozszerzeniem .apk.', 'error');
+          return;
+        }
+        selectedFile = file;
+        updateSelectedFilePreview();
+        showToast('Wybrano plik APK.');
+      }
+
+      function verifyAdminCode(){
+        const value = $('#adminPassword').value;
+        if(value !== ADMIN_CODE){
+          adminUnlocked = false;
+          showToast('Nieprawidłowy kod administratora.', 'error');
+          $('#adminStatus').textContent = 'Kod administratora jest nieprawidłowy.';
+          return false;
+        }
+        adminUnlocked = true;
+        showToast('Panel administratora odblokowany.');
+        $('#adminStatus').textContent = firebaseReady
+          ? 'Kod poprawny. Możesz publikować zmiany do Firebase.'
+          : 'Kod poprawny, ale Firebase nie jest skonfigurowany.';
+        return true;
+      }
+
+      async function publishRelease(){
+        if(!verifyAdminCode()) return;
+        if(!firebaseReady){
+          showToast('Najpierw skonfiguruj Firebase.', 'error');
+          return;
+        }
+
+        const version = $('#adminVersion').value.trim();
+        const android = $('#adminAndroid').value.trim() || DEFAULTS.android;
+        if(!version){
+          showToast('Podaj numer wersji.', 'error');
+          return;
+        }
+        if(!/^\d+(\.\d+){0,3}([\-_a-zA-Z0-9.]*)$/.test(version)){
+          showToast('Numer wersji ma nieprawidłowy format.', 'error');
+          return;
+        }
+
+        const newChanges = $('#adminNewChanges').value.split('\n').map(v => v.trim()).filter(Boolean);
+        const fixedChanges = $('#adminFixedChanges').value.split('\n').map(v => v.trim()).filter(Boolean);
+
+        $('#publishBtn').disabled = true;
+        $('#adminStatus').textContent = selectedFile
+          ? 'Wysyłanie APK do Firebase Storage…'
+          : 'Zapisywanie informacji wydania w Firestore…';
+
+        try{
+          let fileName = currentSettings.fileName || DEFAULTS.fileName;
+          let size = currentSettings.size || '—';
+          let storagePath = currentSettings.storagePath || '';
+          let downloadURL = currentSettings.downloadURL || '';
+
+          if(selectedFile){
+            fileName = selectedFile.name;
+            size = formatBytes(selectedFile.size);
+            const stamp = Date.now();
+            storagePath = `releases/${version}/${stamp}-${fileName.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+            const storageRef = ref(storage, storagePath);
+            const metadata = {
+              contentType: 'application/vnd.android.package-archive',
+              contentDisposition: `attachment; filename="${fileName.replace(/"/g, '')}"`,
+              cacheControl: 'public,max-age=300'
+            };
+            const snapshot = await uploadBytes(storageRef, selectedFile, metadata);
+            downloadURL = await getDownloadURL(snapshot.ref);
+          }else if(!downloadURL){
+            throw new Error('Brak opublikowanego APK. Wybierz plik APK przy pierwszej publikacji.');
+          }
+
+          const payload = {
+            version,
+            android,
+            fileName,
+            size,
+            storagePath,
+            downloadURL,
+            newChanges,
+            fixedChanges,
+            updatedAt: serverTimestamp()
+          };
+
+          await setDoc(releaseRef(), payload, { merge: true });
+
+          currentSettings = {...currentSettings, ...payload};
+          renderPublic();
+          renderAdmin();
+          updateDownloadLinks();
+          selectedFile = null;
+          $('#apkFile').value = '';
+          updateSelectedFilePreview();
+
+          $('#adminStatus').textContent = `Opublikowano v${version} globalnie w Firebase.`;
+          showToast(`FitKuchnia v${version} została opublikowana globalnie.`);
+        }catch(error){
+          console.error(error);
+          const code = error?.code ? ` (${error.code})` : '';
+          $('#adminStatus').textContent = 'Publikacja nie powiodła się.' + code;
+          showToast('Publikacja nie powiodła się. Sprawdź Firebase Security Rules i konfigurację.', 'error');
+        }finally{
+          $('#publishBtn').disabled = false;
+        }
+      }
+
+      async function deletePublishedApk(){
+        if(!verifyAdminCode()) return;
+        if(!firebaseReady){
+          showToast('Firebase nie jest skonfigurowany.', 'error');
+          return;
+        }
+        if(!currentSettings.storagePath){
+          showToast('Brak opublikowanego pliku do usunięcia.');
+          return;
+        }
+        try{
+          await deleteObject(ref(storage, currentSettings.storagePath));
+        }catch(error){
+          if(error?.code !== 'storage/object-not-found') throw error;
+        }
+
+        await setDoc(releaseRef(), {
+          version: currentSettings.version || DEFAULTS.version,
+          android: currentSettings.android || DEFAULTS.android,
+          fileName: DEFAULTS.fileName,
+          size: '—',
+          storagePath: '',
+          downloadURL: '',
+          newChanges: currentSettings.newChanges || DEFAULTS.newChanges,
+          fixedChanges: currentSettings.fixedChanges || DEFAULTS.fixedChanges,
+          updatedAt: serverTimestamp()
+        });
+
+        currentSettings = {
+          ...currentSettings,
+          fileName: DEFAULTS.fileName,
+          size: '—',
+          storagePath: '',
+          downloadURL: ''
+        };
+        renderPublic();
+        renderAdmin();
+        updateDownloadLinks();
+        showToast('Opublikowany APK został usunięty z Firebase.');
+      }
+
+      function renderFeedbackAdmin(items){
+        const host = $('#adminFeedbackList');
+        const list = Array.isArray(items) ? items : [];
+        host.innerHTML = '';
+        $('#adminCurrentFeedback').textContent = String(list.length);
+
+        if(!list.length){
+          host.innerHTML = '<div class="empty-state">Brak zapisanych wiadomości.</div>';
+          return;
+        }
+
+        list.forEach(item => {
+          const card = document.createElement('article');
+          card.className = 'feedback-item';
+          const stars = '★'.repeat(Math.max(0, Math.min(5, Number(item.rating) || 0))) +
+            '☆'.repeat(5 - Math.max(0, Math.min(5, Number(item.rating) || 0)));
+          const date = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleString('pl-PL') : (item.date || '—');
+          card.innerHTML = `
             <div class="feedback-item-head">
-              <div><strong>${escapeHtml(item.name)}</strong><div class="feedback-meta">${escapeHtml(item.email)} · ${escapeHtml(item.category)} · ${escapeHtml(item.date)}</div></div>
+              <div>
+                <strong>${escapeHtml(item.name)}</strong>
+                <div class="feedback-meta">
+                  ${escapeHtml(item.email)} · ${escapeHtml(item.category)} · ${escapeHtml(date)}
+                </div>
+              </div>
               <span style="color:#ffd257;letter-spacing:.05em">${stars}</span>
             </div>
             <div class="feedback-text">${escapeHtml(item.message)}</div>
-            <div class="feedback-item-actions"><button class="ghost-btn danger" type="button" data-delete-feedback="${item.id}">Usuń</button></div>`;
+            <div class="feedback-item-actions">
+              <button class="ghost-btn danger" type="button" data-delete-feedback="${escapeHtml(item.id)}">Usuń</button>
+            </div>
+          `;
           host.appendChild(card);
         });
       }
 
-      function escapeHtml(str){
-        return String(str ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      function listenForFeedback(){
+        if(!firebaseReady) return;
+        if(unsubscribeFeedback) unsubscribeFeedback();
+        const q = query(collection(db, FEEDBACK_COLLECTION), orderBy('createdAt', 'desc'));
+        unsubscribeFeedback = onSnapshot(
+          q,
+          snapshot => {
+            const items = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
+            renderFeedbackAdmin(items);
+            $('#feedbackCountPublic').textContent = `${items.length} zgłoszeń w chmurze`;
+          },
+          error => {
+            console.error(error);
+            $('#adminFeedbackList').innerHTML = '<div class="empty-state">Nie udało się pobrać zgłoszeń. Sprawdź reguły Firestore.</div>';
+          }
+        );
       }
 
-      function openDb(){
-        if(dbPromise) return dbPromise;
-        dbPromise=new Promise((resolve,reject)=>{
-          if(!('indexedDB' in window)) return reject(new Error('IndexedDB niedostępne'));
-          const request=indexedDB.open('fitkuchnia-db',1);
-          request.onupgradeneeded=()=>{
-            const db=request.result;
-            if(!db.objectStoreNames.contains('apk')) db.createObjectStore('apk');
-          };
-          request.onsuccess=()=>resolve(request.result);
-          request.onerror=()=>reject(request.error);
-        });
-        return dbPromise;
-      }
-
-      async function setApkBlob(blob){
-        const db=await openDb();
-        return new Promise((resolve,reject)=>{
-          const tx=db.transaction('apk','readwrite');
-          tx.objectStore('apk').put(blob,'current');
-          tx.oncomplete=resolve;
-          tx.onerror=()=>reject(tx.error);
-        });
-      }
-
-      async function getApkBlob(){
-        try{
-          const db=await openDb();
-          return await new Promise((resolve,reject)=>{
-            const tx=db.transaction('apk','readonly');
-            const req=tx.objectStore('apk').get('current');
-            req.onsuccess=()=>resolve(req.result || null);
-            req.onerror=()=>reject(req.error);
-          });
-        }catch(e){return null}
-      }
-
-      async function deleteApkBlob(){
-        const db=await openDb();
-        return new Promise((resolve,reject)=>{
-          const tx=db.transaction('apk','readwrite');
-          tx.objectStore('apk').delete('current');
-          tx.oncomplete=resolve;
-          tx.onerror=()=>reject(tx.error);
-        });
-      }
-
-      async function refreshApkLink(){
-        if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
-        const blob=await getApkBlob();
-        if(blob instanceof Blob){
-          objectUrl=URL.createObjectURL(blob);
-          setDownloadState(true,objectUrl,currentSettings.fileName || 'FitKuchnia.apk');
-          return true;
+      async function submitFeedback(e){
+        e.preventDefault();
+        if(!firebaseReady){
+          showToast('Formularz nie może wysłać wiadomości, dopóki Firebase nie jest skonfigurowany.', 'error');
+          return;
         }
-        setDownloadState(false,'#',currentSettings.fileName);
-        return false;
+
+        const form = e.currentTarget;
+        const data = new FormData(form);
+        const rating = form.querySelector('input[name="rating"]:checked')?.value;
+        if(!rating){
+          $('#feedbackFormMessage').textContent = 'Wybierz ocenę gwiazdkową.';
+          showToast('Wybierz ocenę gwiazdkową.', 'error');
+          return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        $('#feedbackFormMessage').textContent = 'Wysyłanie do Firebase…';
+
+        try{
+          await addDoc(collection(db, FEEDBACK_COLLECTION), {
+            name: String(data.get('name') || '').trim(),
+            email: String(data.get('email') || '').trim(),
+            category: String(data.get('category') || 'Opinia'),
+            rating: Number(rating),
+            message: String(data.get('message') || '').trim(),
+            version: currentSettings.version || DEFAULTS.version,
+            createdAt: serverTimestamp()
+          });
+
+          form.reset();
+          $('#feedbackFormMessage').textContent = 'Wiadomość została wysłana do chmury Firebase.';
+          showToast('Dziękujemy! Zgłoszenie trafiło do administracji.');
+        }catch(error){
+          console.error(error);
+          $('#feedbackFormMessage').textContent = 'Nie udało się wysłać wiadomości.';
+          showToast('Nie udało się wysłać zgłoszenia. Sprawdź reguły Firestore.', 'error');
+        }finally{
+          submitBtn.disabled = false;
+        }
+      }
+
+      async function deleteFeedback(id){
+        if(!verifyAdminCode()) return;
+        if(!firebaseReady) return;
+        try{
+          await deleteDoc(doc(db, FEEDBACK_COLLECTION, id));
+          showToast('Wiadomość została usunięta z Firestore.');
+        }catch(error){
+          console.error(error);
+          showToast('Nie udało się usunąć wiadomości.', 'error');
+        }
       }
 
       function showSite(){
         $('#adminView').classList.add('hidden');
         $('#siteView').classList.remove('hidden');
-        window.scrollTo({top:0,behavior:'instant'});
-        history.replaceState(null,'',location.pathname+location.search+'#home');
+        window.scrollTo({top:0, behavior:'instant'});
+        history.replaceState(null, '', location.pathname + location.search + '#home');
       }
 
       function showAdmin(){
         $('#siteView').classList.add('hidden');
         $('#adminView').classList.remove('hidden');
         renderAdmin();
-        window.scrollTo({top:0,behavior:'instant'});
-        history.replaceState(null,'',location.pathname+location.search+'#admin');
-      }
-
-      function updateSelectedFilePreview(){
-        const preview=$('#filePreview');
-        if(!selectedFile){preview.classList.add('hidden');return}
-        $('#selectedFileName').textContent=selectedFile.name;
-        $('#selectedFileSize').textContent=formatBytes(selectedFile.size);
-        preview.classList.remove('hidden');
-      }
-
-      function selectFile(file){
-        if(!file) return;
-        if(!/\.apk$/i.test(file.name)){
-          showToast('Wybierz plik z rozszerzeniem .apk.','error');
-          return;
-        }
-        selectedFile=file;
-        updateSelectedFilePreview();
-        showToast('Wybrano plik APK.');
+        listenForFeedback();
+        window.scrollTo({top:0, behavior:'instant'});
+        history.replaceState(null, '', location.pathname + location.search + '#admin');
       }
 
       function handleDownloadClick(e){
-        const link=e.currentTarget;
-        if(link.dataset.ready!=='1'){
+        const link = e.currentTarget;
+        if(link.dataset.ready !== '1'){
           e.preventDefault();
-          showToast('Najpierw wgraj plik APK w panelu Administracja.','error');
+          showToast(firebaseReady ? 'Brak opublikowanego APK.' : 'Firebase nie jest skonfigurowany.', 'error');
         }
       }
 
-      // Public download links
-      $$('[data-apk-link]').forEach(link=>link.addEventListener('click',handleDownloadClick));
+      $$('[data-apk-link]').forEach(link => link.addEventListener('click', handleDownloadClick));
+      $('#openAdminBtn').addEventListener('click', showAdmin);
+      $('#backToSiteBtn').addEventListener('click', showSite);
+      $('#adminPassword').addEventListener('input', () => {
+        if($('#adminPassword').value === ADMIN_CODE){
+          adminUnlocked = true;
+          $('#adminStatus').textContent = firebaseReady
+            ? 'Kod poprawny. Panel administratora jest odblokowany.'
+            : 'Kod poprawny, ale Firebase nie jest skonfigurowany.';
+        }else{
+          adminUnlocked = false;
+        }
+      });
+      $('#adminPassword').addEventListener('keydown', e => {
+        if(e.key === 'Enter') verifyAdminCode();
+      });
 
-      // Navigation
-      $('#openAdminBtn').addEventListener('click',showAdmin);
-      $('#backToSiteBtn').addEventListener('click',showSite);
-
-      // Admin file picker and DnD
-      const dropzone=$('#dropzone');
-      const apkInput=$('#apkFile');
-      dropzone.addEventListener('click',()=>apkInput.click());
-      dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();apkInput.click()}});
-      ['dragenter','dragover'].forEach(type=>dropzone.addEventListener(type,e=>{e.preventDefault();dropzone.classList.add('dragover')}));
-      ['dragleave','drop'].forEach(type=>dropzone.addEventListener(type,e=>{e.preventDefault();dropzone.classList.remove('dragover')}));
-      dropzone.addEventListener('drop',e=>selectFile(e.dataTransfer.files?.[0]));
-      apkInput.addEventListener('change',e=>selectFile(e.target.files?.[0]));
-      $('#clearSelectedFile').addEventListener('click',()=>{selectedFile=null;apkInput.value='';updateSelectedFilePreview()});
-
-      // Publish
-      $('#publishBtn').addEventListener('click',async()=>{
-        const pass=$('#adminPassword').value;
-        if(pass!=='1234'){
-          $('#adminStatus').textContent='Nieprawidłowe hasło administratora.';
-          showToast('Nieprawidłowe hasło administratora.','error');
+      const dropzone = $('#dropzone');
+      const apkInput = $('#apkFile');
+      dropzone.addEventListener('click', () => {
+        if(!adminUnlocked){
+          showToast('Wpisz poprawny kod administratora.', 'error');
           return;
         }
-        const version=$('#adminVersion').value.trim();
-        const android=$('#adminAndroid').value.trim() || DEFAULTS.android;
-        if(!version){showToast('Podaj numer wersji.','error');return}
-        if(!/^\d+(\.\d+){0,3}([\-_a-zA-Z0-9.]*)$/.test(version)){
-          showToast('Numer wersji ma nieprawidłowy format.','error');return;
-        }
-
-        try{
-          if(selectedFile){
-            await setApkBlob(selectedFile);
-            currentSettings.fileName=selectedFile.name;
-            currentSettings.size=formatBytes(selectedFile.size);
+        apkInput.click();
+      });
+      dropzone.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          if(!adminUnlocked){
+            showToast('Wpisz poprawny kod administratora.', 'error');
+            return;
           }
-          currentSettings.version=version;
-          currentSettings.android=android;
-          currentSettings.newChanges=$('#adminNewChanges').value.split('\n').map(s=>s.trim()).filter(Boolean);
-          currentSettings.fixedChanges=$('#adminFixedChanges').value.split('\n').map(s=>s.trim()).filter(Boolean);
-          saveSettings();
-          renderPublic();
-          renderAdmin();
-          await refreshApkLink();
-          $('#adminStatus').textContent=`Zapisano v${version}.`;
-          showToast(`FitKuchnia v${version} została opublikowana w tej przeglądarce.`);
-        }catch(err){
-          console.error(err);
-          showToast('Nie udało się zapisać pliku APK. Sprawdź, czy przeglądarka obsługuje IndexedDB.','error');
+          apkInput.click();
         }
       });
-
-      // Reset metadata
-      $('#resetSettingsBtn').addEventListener('click',()=>{
-        currentSettings=structuredClone(DEFAULTS);
-        saveSettings();
-        renderPublic();
-        renderAdmin();
-        refreshApkLink();
-        showToast('Przywrócono domyślne ustawienia tekstowe.','success');
-      });
-
-      // Delete stored APK
-      $('#deleteApkBtn').addEventListener('click',async()=>{
-        if($('#adminPassword').value!=='1234'){
-          showToast('Wpisz poprawne hasło administratora.','error');
-          return;
-        }
-        try{
-          await deleteApkBlob();
-          currentSettings.fileName=DEFAULTS.fileName;
-          currentSettings.size='';
-          saveSettings();
-          await refreshApkLink();
-          renderPublic();
-          renderAdmin();
-          showToast('Zapisany APK został usunięty.');
-        }catch(e){showToast('Nie udało się usunąć APK.','error')}
-      });
-
-      // Feedback form
-      $('#feedbackForm').addEventListener('submit',e=>{
+      ['dragenter','dragover'].forEach(type => dropzone.addEventListener(type, e => {
         e.preventDefault();
-        const form=e.currentTarget;
-        const data=new FormData(form);
-        const rating=form.querySelector('input[name="rating"]:checked')?.value;
-        if(!rating){
-          $('#feedbackFormMessage').textContent='Wybierz ocenę gwiazdkową.';
-          showToast('Wybierz ocenę gwiazdkową.','error');
-          return;
-        }
-        const entry={
-          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
-          name:String(data.get('name')||'').trim(),
-          email:String(data.get('email')||'').trim(),
-          category:String(data.get('category')||'Opinia'),
-          rating:Number(rating),
-          message:String(data.get('message')||'').trim(),
-          date:new Intl.DateTimeFormat('pl-PL',{dateStyle:'medium',timeStyle:'short'}).format(new Date())
-        };
-        const list=getFeedback();
-        list.push(entry);
-        saveFeedback(list);
-        form.reset();
-        $('#feedbackFormMessage').textContent='Wiadomość została zapisana lokalnie.';
-        renderPublic();
-        renderAdmin();
-        showToast('Dziękujemy! Wiadomość została zapisana.');
+        if(adminUnlocked) dropzone.classList.add('dragover');
+      }));
+      ['dragleave','drop'].forEach(type => dropzone.addEventListener(type, e => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+      }));
+      dropzone.addEventListener('drop', e => selectFile(e.dataTransfer.files?.[0]));
+      apkInput.addEventListener('change', e => selectFile(e.target.files?.[0]));
+      $('#clearSelectedFile').addEventListener('click', () => {
+        selectedFile = null;
+        apkInput.value = '';
+        updateSelectedFilePreview();
       });
 
-      $('#adminFeedbackList').addEventListener('click',e=>{
-        const btn=e.target.closest('[data-delete-feedback]');
+      $('#publishBtn').addEventListener('click', publishRelease);
+      $('#resetSettingsBtn').addEventListener('click', async () => {
+        await loadReleaseOnce();
+        updateDownloadLinks();
+        showToast('Dane zostały odświeżone z Firebase.');
+      });
+
+      $('#deleteApkBtn').addEventListener('click', async () => {
+        if(!confirm('Usunąć aktualnie opublikowany APK z Firebase Storage?')) return;
+        try{
+          await deletePublishedApk();
+        }catch(error){
+          console.error(error);
+          showToast('Nie udało się usunąć APK z Firebase.', 'error');
+        }
+      });
+
+      $('#feedbackForm').addEventListener('submit', submitFeedback);
+
+      $('#adminFeedbackList').addEventListener('click', async e => {
+        const btn = e.target.closest('[data-delete-feedback]');
         if(!btn) return;
-        const id=btn.dataset.deleteFeedback;
-        const filtered=getFeedback().filter(item=>item.id!==id);
-        saveFeedback(filtered);
-        renderAdmin();
-        renderPublic();
-        showToast('Wiadomość została usunięta.');
+        await deleteFeedback(btn.dataset.deleteFeedback);
       });
 
-      $('#clearFeedbackBtn').addEventListener('click',()=>{
-        if($('#adminPassword').value!=='1234'){
-          showToast('Wpisz poprawne hasło administratora.','error');
-          return;
+      $('#clearFeedbackBtn').addEventListener('click', async () => {
+        if(!verifyAdminCode()) return;
+        if(!firebaseReady) return;
+        if(!confirm('Usunąć wszystkie wiadomości z Cloud Firestore?')) return;
+        try{
+          const snapshot = await getDocs(collection(db, FEEDBACK_COLLECTION));
+          if(snapshot.empty){
+            showToast('Lista wiadomości jest już pusta.');
+            return;
+          }
+          const batch = writeBatch(db);
+          snapshot.forEach(item => batch.delete(item.ref));
+          await batch.commit();
+          showToast('Wyczyszczono wszystkie wiadomości z Firestore.');
+        }catch(error){
+          console.error(error);
+          showToast('Nie udało się wyczyścić wiadomości. Sprawdź reguły Firestore.', 'error');
         }
-        if(!getFeedback().length){showToast('Lista jest już pusta.');return}
-        if(!confirm('Usunąć wszystkie opinie i zgłoszenia zapisane w tej przeglądarce?')) return;
-        saveFeedback([]);
-        renderAdmin();
-        renderPublic();
-        showToast('Wyczyszczono listę wiadomości.');
       });
 
-      // Allow Enter in admin password to publish
-      $('#adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter') $('#publishBtn').click()});
-
-      // Keep hash-based admin view on refresh
       async function init(){
         renderPublic();
         renderAdmin();
-        await refreshApkLink();
-        const isAdmin=location.hash==='#admin';
-        if(isAdmin) showAdmin();
 
-        // Smooth navigation while staying in site view
-        $$('a[href^="#"]', $('#siteView')).forEach(a=>a.addEventListener('click',e=>{
+        const ready = await initFirebase();
+        if(ready){
+          await loadReleaseOnce();
+          listenForRelease();
+          listenForFeedback();
+          updateDownloadLinks();
+        }else{
+          updateDownloadLinks();
+        }
+
+        if(location.hash === '#admin') showAdmin();
+
+        $$('a[href^="#"]', $('#siteView')).forEach(a => a.addEventListener('click', e => {
           if(a.classList.contains('disabled-link')) return;
-          const id=a.getAttribute('href');
-          if(id && id!=='#'){
-            setTimeout(()=>history.replaceState(null,'',location.pathname+location.search+id),0);
+          const id = a.getAttribute('href');
+          if(id && id !== '#'){
+            setTimeout(() => history.replaceState(null, '', location.pathname + location.search + id), 0);
           }
         }));
       }
