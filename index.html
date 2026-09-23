@@ -1,1168 +1,1029 @@
-Oto zaktualizowany kod dla pliku `index (1).html`, w którym wszystkie atrybuty `href="FitKuchnia-v3.2.apk"` zostały pomyślnie podmienione na `href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac"`:
-
-```html
-<!DOCTYPE html>
-<html lang="pl" class="dark">
+<!doctype html>
+<html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FITKUCHNIA - Oficjalna Aplikacja Kulinarna AI (APK v3.2)</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            bg: '#080b09',
-                            card: '#121814',
-                            border: '#1b261f',
-                            neon: '#00FF66',
-                            neonHover: '#00cc52',
-                            darkGreen: '#042713',
-                            badgeBg: '#06381c',
-                            badgeText: '#34d399',
-                            muted: '#8e9d93',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #080b09;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08) 0%, transparent 60%),
-                linear-gradient(to bottom, rgba(8, 11, 9, 0.9), #080b09);
-        }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080c0a">
+  <meta name="description" content="FitKuchnia — nowoczesna aplikacja kulinarna z przepisami i fit inspiracjami.">
+  <title>FitKuchnia — aplikacja kulinarna</title>
+  <style>
+    :root{
+      --bg:#080c0a;
+      --bg-2:#0d120f;
+      --panel:#121814;
+      --panel-2:#0f1511;
+      --border:#1e2c22;
+      --border-strong:#294334;
+      --text:#f3f7f4;
+      --muted:#8d9a92;
+      --green:#00ff66;
+      --green-2:#10b981;
+      --green-soft:rgba(0,255,102,.11);
+      --danger:#ff5f6d;
+      --warning:#ffc857;
+      --radius:16px;
+      --shadow:0 18px 55px rgba(0,0,0,.36);
+      --max:1180px;
+    }
 
-        .neon-border {
-            border: 1px solid rgba(0, 255, 102, 0.35);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.08);
-        }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 15% 5%, rgba(0,255,102,.08), transparent 28%),
+        radial-gradient(circle at 88% 10%, rgba(16,185,129,.055), transparent 25%),
+        var(--bg);
+      line-height:1.55;
+    }
 
-        .neon-border-glow {
-            border: 1px solid #00FF66;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.35);
-        }
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    img{display:block;max-width:100%}
+    .hidden{display:none!important}
+    .container{width:min(var(--max),calc(100% - 32px));margin-inline:auto}
+    .muted{color:var(--muted)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-        .btn-neon {
-            background-color: #00FF66;
-            color: #000000;
-            font-weight: 800;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    /* Header */
+    .site-header{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:blur(16px);
+      background:rgba(8,12,10,.86);
+      border-bottom:1px solid rgba(30,44,34,.78);
+    }
+    .nav-row{
+      min-height:72px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      font-weight:900;
+      letter-spacing:.11em;
+      font-size:.92rem;
+    }
+    .brand-mark{
+      width:30px;height:30px;border-radius:9px;
+      display:grid;place-items:center;
+      color:#031108;background:var(--green);
+      font-size:15px;font-weight:950;
+      box-shadow:0 0 25px rgba(0,255,102,.22);
+    }
+    .brand span{color:var(--green)}
+    .download-btn,.primary-btn{
+      border:1px solid rgba(0,255,102,.28);
+      background:linear-gradient(135deg,var(--green),#8affba);
+      color:#04110a;
+      font-weight:900;
+      border-radius:12px;
+      padding:10px 14px;
+      transition:.2s transform,.2s box-shadow,.2s opacity;
+      box-shadow:0 8px 26px rgba(0,255,102,.12);
+    }
+    .download-btn:hover,.primary-btn:hover{transform:translateY(-1px);box-shadow:0 11px 34px rgba(0,255,102,.19)}
+    .download-btn:disabled,.primary-btn:disabled{opacity:.42;cursor:not-allowed;transform:none;box-shadow:none}
+    .ghost-btn,.nav-btn{
+      border:1px solid var(--border);
+      background:#0f1411;
+      color:var(--text);
+      border-radius:12px;
+      padding:9px 13px;
+      transition:.2s background,.2s border-color,.2s transform;
+    }
+    .ghost-btn:hover,.nav-btn:hover{background:#141b16;border-color:var(--border-strong);transform:translateY(-1px)}
+    .nav-links{display:flex;gap:4px;margin-left:auto;align-items:center}
+    .nav-link{padding:9px 10px;border-radius:10px;color:#b9c5bd;font-size:.88rem;white-space:nowrap}
+    .nav-link:hover{color:var(--text);background:#111712}
+    .admin-nav{margin-left:4px;color:var(--green);border-color:rgba(0,255,102,.22)}
 
-        .btn-neon:hover {
-            background-color: #00e65c;
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(0, 255, 102, 0.6);
-        }
+    /* Sections */
+    main section{padding:72px 0}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      color:var(--green);font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;
+      margin-bottom:16px;
+    }
+    .eyebrow::before{content:"";width:24px;height:1px;background:var(--green);box-shadow:0 0 10px var(--green)}
+    h1,h2,h3{line-height:1.12;margin:0}
+    h1{font-size:clamp(2.3rem,6vw,5.8rem);letter-spacing:-.055em}
+    h2{font-size:clamp(1.7rem,3.4vw,3.1rem);letter-spacing:-.035em}
+    h3{font-size:1.05rem}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
+    .section-head p{max-width:650px;color:var(--muted);margin:10px 0 0}
+    .badge{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:5px 9px;border-radius:999px;
+      background:rgba(0,255,102,.09);border:1px solid rgba(0,255,102,.22);
+      color:var(--green);font-size:.69rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .badge.neutral{color:#c7d1ca;border-color:var(--border);background:#111713}
+    .badge.warning{color:var(--warning);border-color:rgba(255,200,87,.22);background:rgba(255,200,87,.08)}
 
-        .phone-mockup-frame {
-            background: #0d120f;
-            border: 3px solid #1c2a20;
-            border-radius: 36px;
-            box-shadow: 0 25px 60px -15px rgba(0, 255, 102, 0.2);
-        }
+    /* Hero */
+    .hero{padding-top:92px}
+    .hero-grid{display:grid;grid-template-columns:1.07fr .93fr;gap:34px;align-items:stretch}
+    .hero-copy{padding:18px 0}
+    .hero-copy p{max-width:680px;color:#b8c2bb;font-size:1.04rem;margin:24px 0 0}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+    .hero-meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:19px;color:var(--muted);font-size:.82rem}
+    .hero-meta strong{color:#d9e2dc}
+    .hero-accent{color:var(--green)}
 
-        .scroll-custom::-webkit-scrollbar {
-            width: 6px;
-        }
-        .scroll-custom::-webkit-scrollbar-track {
-            background: #0d120f;
-        }
-        .scroll-custom::-webkit-scrollbar-thumb {
-            background: #1c2a20;
-            border-radius: 4px;
-        }
-        .scroll-custom::-webkit-scrollbar-thumb:hover {
-            background: #00FF66;
-        }
-    </style>
+    .app-card,.card{
+      background:linear-gradient(180deg,rgba(18,24,20,.96),rgba(12,17,14,.98));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .app-card{padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:390px;overflow:hidden;position:relative}
+    .app-card::after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:rgba(0,255,102,.07);filter:blur(70px);right:-110px;top:-100px;pointer-events:none}
+    .app-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .file-icon{width:55px;height:55px;border-radius:15px;background:#09100c;border:1px solid var(--border);display:grid;place-items:center;color:var(--green);font-weight:950;font-size:1rem}
+    .app-card-title{margin-top:20px}
+    .app-card-title h3{font-size:1.45rem}
+    .file-name{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#dbe5de;font-size:.9rem}
+    .specs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:23px 0}
+    .spec{padding:13px;border:1px solid var(--border);border-radius:12px;background:#0b100d}
+    .spec small{display:block;color:var(--muted);font-size:.72rem;margin-bottom:4px}
+    .spec strong{font-size:.9rem}
+    .app-download{width:100%;padding:14px 16px;border-radius:13px;font-size:.92rem}
+
+    /* About / gallery */
+    .about-grid{display:grid;grid-template-columns:.72fr 1.28fr;gap:22px}
+    .copy-card{padding:28px}
+    .copy-card p{color:var(--muted);margin:15px 0 0}
+    .feature-list{display:grid;gap:10px;margin-top:22px}
+    .feature{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:12px;background:#0d130f}
+    .feature-icon{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:9px;background:rgba(0,255,102,.08);color:var(--green)}
+    .gallery{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .food-card{position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--border);min-height:210px;background:#111}
+    .food-card:nth-child(1){grid-column:span 7;min-height:270px}
+    .food-card:nth-child(2){grid-column:span 5;min-height:270px}
+    .food-card:nth-child(3){grid-column:span 4}
+    .food-card:nth-child(4){grid-column:span 4}
+    .food-card:nth-child(5){grid-column:span 4}
+    .food-card img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease;filter:saturate(1.06) contrast(1.02)}
+    .food-card:hover img{transform:scale(1.035)}
+    .food-overlay{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;background:rgba(4,8,6,.78);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.08)}
+    .food-name{font-size:.82rem;font-weight:800}
+
+    /* Changelog */
+    .change-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .change-card{padding:22px}
+    .change-card-head{display:flex;align-items:center;gap:10px;margin-bottom:15px}
+    .change-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(0,255,102,.09);color:var(--green);border:1px solid rgba(0,255,102,.16)}
+    .change-card ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .change-card li{display:flex;gap:9px;color:#c5cec8}
+    .change-card li::before{content:"✓";color:var(--green);font-weight:900}
+    .change-card.fix li::before{content:"⌁"}
+    .version-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 17px;margin-top:16px;border:1px solid var(--border);border-radius:13px;background:#0c120e}
+
+    /* Instructions */
+    .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .step{padding:20px;border:1px solid var(--border);border-radius:15px;background:#0d130f;min-height:210px}
+    .step-no{width:34px;height:34px;border-radius:10px;background:var(--green);color:#021108;display:grid;place-items:center;font-weight:950;margin-bottom:18px}
+    .step h3{font-size:.98rem;margin-bottom:9px}
+    .step p{font-size:.83rem;color:var(--muted);margin:0}
+    .notice{padding:14px 16px;border:1px solid rgba(255,200,87,.16);background:rgba(255,200,87,.05);border-radius:13px;color:#c9c5b8;margin-top:15px;font-size:.85rem}
+
+    /* Feedback */
+    .feedback-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px}
+    .feedback-copy{padding:26px}
+    .feedback-copy .small-stat{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .form-card{padding:25px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    label{font-size:.79rem;font-weight:800;color:#d8e0da}
+    input,select,textarea{
+      width:100%;border-radius:12px;border:1px solid var(--border);background:#0a100d;color:var(--text);outline:none;padding:12px 13px;
+      transition:.2s border-color,.2s box-shadow;
+    }
+    input::placeholder,textarea::placeholder{color:#647068}
+    input:focus,select:focus,textarea:focus{border-color:rgba(0,255,102,.38);box-shadow:0 0 0 3px rgba(0,255,102,.06)}
+    textarea{min-height:138px;resize:vertical}
+    .stars{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:4px}
+    .stars input{display:none}
+    .stars label{cursor:pointer;font-size:1.55rem;color:#455149;line-height:1}
+    .stars label:hover,.stars label:hover~label,.stars input:checked~label{color:#ffd257}
+    .form-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px}
+    .form-message{font-size:.8rem;color:var(--muted)}
+
+    /* Admin */
+    .admin-view{min-height:100vh;background:var(--bg)}
+    .admin-header{position:sticky;top:0;z-index:20;background:rgba(8,12,10,.94);backdrop-filter:blur(15px);border-bottom:1px solid var(--border)}
+    .admin-header-row{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .admin-brand{font-weight:950;letter-spacing:.03em}
+    .admin-brand span{color:var(--green)}
+    .admin-main{padding:58px 0 90px}
+    .admin-title{margin-bottom:26px}
+    .admin-layout{display:grid;grid-template-columns:1fr .75fr;gap:16px;align-items:start}
+    .admin-card{padding:24px}
+    .admin-card h3{font-size:1.18rem;margin-bottom:8px}
+    .admin-card > p{color:var(--muted);margin:0 0 20px;font-size:.9rem}
+    .dropzone{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:210px;padding:24px;text-align:center;
+      border:1px dashed #35503e;border-radius:15px;background:#0b110d;transition:.2s background,.2s border-color,.2s transform;
+    }
+    .dropzone.dragover{background:rgba(0,255,102,.06);border-color:rgba(0,255,102,.55);transform:scale(1.002)}
+    .cloud{width:52px;height:52px;border-radius:15px;background:rgba(0,255,102,.08);border:1px solid rgba(0,255,102,.17);display:grid;place-items:center;color:var(--green);margin-bottom:14px}
+    .dropzone strong{font-size:.9rem}
+    .dropzone small{color:var(--muted);margin-top:6px}
+    .file-preview{margin-top:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#0b100d;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .admin-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .admin-row + .admin-row{margin-top:11px}
+    .admin-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+    .editor-columns{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .editor-columns textarea{min-height:165px}
+    .admin-divider{height:1px;background:var(--border);margin:20px 0}
+    .feedback-list{display:grid;gap:10px}
+    .feedback-item{padding:14px;border:1px solid var(--border);border-radius:13px;background:#0b100d}
+    .feedback-item-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .feedback-meta{font-size:.76rem;color:var(--muted);margin-top:3px}
+    .feedback-text{color:#cbd4ce;font-size:.85rem;margin-top:10px;white-space:pre-wrap}
+    .feedback-item-actions{margin-top:11px;display:flex;gap:8px}
+    .danger{border-color:rgba(255,95,109,.2)!important;color:#ff9ca5!important;background:rgba(255,95,109,.05)!important}
+    .empty-state{padding:18px;border:1px dashed var(--border);border-radius:13px;color:var(--muted);text-align:center}
+    .status-line{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem;margin-top:11px}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(0,255,102,.6)}
+
+    /* Toast */
+    .toast-wrap{position:fixed;right:16px;bottom:16px;z-index:100;display:grid;gap:8px}
+    .toast{max-width:360px;padding:12px 14px;border-radius:13px;border:1px solid var(--border);background:#111713;box-shadow:var(--shadow);font-size:.84rem;animation:toastIn .22s ease both}
+    .toast.success{border-color:rgba(0,255,102,.22)}
+    .toast.error{border-color:rgba(255,95,109,.24)}
+    @keyframes toastIn{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+    footer{padding:10px 0 55px;color:#69766e;font-size:.76rem}
+
+    @media (max-width:1080px){
+      .nav-links{overflow:auto;max-width:48vw;padding-bottom:2px}
+      .steps{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width:900px){
+      .hero-grid,.about-grid,.feedback-grid,.admin-layout{grid-template-columns:1fr}
+      .hero{padding-top:66px}
+      .nav-row{flex-wrap:wrap;padding:11px 0}
+      .nav-links{order:3;max-width:none;width:100%}
+      .change-grid{grid-template-columns:1fr}
+      .food-card:nth-child(n){grid-column:span 6}
+      .food-card:nth-child(1),.food-card:nth-child(2){min-height:230px}
+    }
+    @media (max-width:620px){
+      .container{width:min(var(--max),calc(100% - 22px))}
+      main section{padding:54px 0}
+      .hero{padding-top:45px}
+      .brand-wrap{width:100%;justify-content:space-between}
+      .brand{font-size:.82rem}
+      .nav-links{gap:0}
+      .nav-link{font-size:.76rem;padding:8px 7px}
+      .admin-nav{font-size:.76rem}
+      .specs{grid-template-columns:1fr}
+      .section-head{align-items:flex-start;flex-direction:column}
+      .steps{grid-template-columns:1fr}
+      .form-grid,.admin-row,.editor-columns{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      .food-card:nth-child(n){grid-column:span 12;min-height:235px}
+      .food-card:nth-child(1){min-height:270px}
+      .version-strip{align-items:flex-start;flex-direction:column}
+      .form-actions{align-items:flex-start;flex-direction:column}
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-brand-neon selection:text-black">
-
-    <!-- Navigation -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-brand-bg/80 border-b border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black text-xl shadow-[0_0_12px_rgba(0,255,102,0.3)]">
-                    F
-                </div>
-                <div>
-                    <span class="text-2xl font-black tracking-wider text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-                    <span class="hidden sm:inline-block ml-2 text-xs font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded-full border border-brand-neon/30">v3.2 APK</span>
-                </div>
-            </div>
-
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-300">
-                <a href="#funkcje" class="hover:text-brand-neon transition-colors">Moduły</a>
-                <a href="#aktualnosci" class="hover:text-brand-neon transition-colors">Zmiany (v3.2)</a>
-                <a href="#zglos-blad" class="hover:text-brand-neon transition-colors">Zgłoś błąd</a>
-                <a href="#instrukcja" class="hover:text-brand-neon transition-colors">Instalacja</a>
-            </nav>
-
-            <div>
-                <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon px-5 py-2.5 rounded-xl text-sm inline-flex items-center space-x-2">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Pobierz APK</span>
-                </a>
-            </div>
+<body>
+  <div id="siteView">
+    <header class="site-header">
+      <div class="container nav-row">
+        <div class="brand-wrap">
+          <a href="#home" class="brand" aria-label="FitKuchnia — strona główna">
+            <span class="brand-mark">F</span>
+            FIT<span>KUCHNIA</span>
+          </a>
+          <a class="download-btn disabled-link" data-apk-link href="#" aria-disabled="true">Pobierz APK</a>
         </div>
+        <nav class="nav-links" aria-label="Główna nawigacja">
+          <a class="nav-link" href="#home">Strona główna</a>
+          <a class="nav-link" href="#about">O aplikacji</a>
+          <a class="nav-link" href="#changelog">Dziennik zmian</a>
+          <a class="nav-link" href="#install">Instrukcja</a>
+          <a class="nav-link" href="#feedback">Zgłoś błąd / Opinia</a>
+          <button class="nav-link nav-btn admin-nav" id="openAdminBtn" type="button">Administracja</button>
+        </nav>
+      </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Hero Left Column -->
-                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
-                    <div class="inline-flex items-center space-x-2 bg-brand-card border border-brand-neon/40 px-4 py-2 rounded-full text-xs font-mono text-brand-neon">
-                        <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
-                        <span>CHMURA FIREBASE: AKTYWNA SYNCHRONIZACJA NA ŻYWO</span>
-                    </div>
-
-                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
-                        Inteligentna Aplikacja Kulinarna <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon to-emerald-400">Nowej Generacji</span>
-                    </h1>
-
-                    <p class="text-lg text-brand-muted max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Gotuj mądrzej z asystentem AI. Łącz warianty przepisów, szukaj po zawartości swojej lodówki, przeliczaj makro na żywo i zbieraj <strong>Fit Punkty</strong>!
-                    </p>
-
-                    <!-- Main Download Box Card -->
-                    <div class="bg-brand-card p-6 sm:p-8 rounded-2xl neon-border-glow relative overflow-hidden text-left max-w-xl mx-auto lg:mx-0">
-                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-neon/10 rounded-full blur-2xl pointer-events-none"></div>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-2 text-white font-bold text-lg">
-                                    <i class="fa-brands fa-android text-brand-neon text-2xl"></i>
-                                    <span>FitKuchnia.apk</span>
-                                </div>
-                                <p class="text-xs text-brand-muted font-mono">
-                                    Wydanie: 3.2 | Rozmiar APK: ~29 MB | Android 8.0+
-                                </p>
-                                <div class="flex items-center space-x-2 text-xs text-emerald-400">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span>Bezpieczna instalacja bezpośrednia</span>
-                                </div>
-                            </div>
-
-                            <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon text-center w-full sm:w-auto px-8 py-4 rounded-xl text-base flex items-center justify-center space-x-3 shrink-0">
-                                <i class="fa-solid fa-cloud-arrow-down text-xl"></i>
-                                <span>POBIERZ APK</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Right Column: Interactive Phone Mockup -->
-                <div class="lg:col-span-5 flex justify-center">
-                    <div class="phone-mockup-frame w-full max-w-[360px] p-4 relative">
-                        <div class="w-32 h-4 bg-black rounded-full mx-auto mb-4 flex items-center justify-center space-x-2">
-                            <div class="w-3 h-3 rounded-full bg-neutral-900"></div>
-                            <div class="w-10 h-1 bg-neutral-800 rounded-full"></div>
-                        </div>
-
-                        <div class="bg-[#0a0d0a] rounded-[24px] p-4 border border-brand-border space-y-4 text-left font-sans text-xs min-h-[580px] flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center text-gray-400 text-[10px] font-mono border-b border-brand-border/60 pb-2">
-                                    <span>13:09</span>
-                                    <span class="text-brand-neon"><i class="fa-solid fa-wifi"></i> 86% <i class="fa-solid fa-battery-full"></i></span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h3 class="text-white font-black text-lg tracking-wider">FIT<span class="text-brand-neon">KUCHNIA</span></h3>
-                                        <p class="text-[10px] text-gray-400">1 przepisów w telefonie</p>
-                                    </div>
-                                    <div class="bg-brand-neon text-black px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center space-x-1">
-                                        <i class="fa-solid fa-plus"></i>
-                                        <span>Dodaj</span>
-                                    </div>
-                                </div>
-                                <div class="bg-brand-card border border-brand-neon/30 p-2 rounded-xl flex items-center space-x-2 text-[11px]">
-                                    <span class="w-2 h-2 rounded-full bg-brand-neon"></span>
-                                    <span class="text-gray-300 truncate">Konto: Super Admin (Właściciel)</span>
-                                    <span class="bg-brand-badgeBg text-brand-badgeText text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto">ADMIN</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden space-y-2 p-2">
-                                <div class="relative h-28 rounded-xl overflow-hidden bg-neutral-900">
-                                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Przepis Siemię Lniane" class="w-full h-full object-cover">
-                                    <div class="absolute top-2 left-2 bg-black/80 text-brand-neon text-[9px] px-2 py-0.5 rounded-full font-bold">
-                                        <i class="fa-solid fa-camera"></i> Autorskie zdjęcie
-                                    </div>
-                                    <div class="absolute top-2 right-2 bg-brand-badgeBg/90 text-brand-badgeText text-[9px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/30">
-                                        <i class="fa-solid fa-circle-check"></i> Zatwierdzony
-                                    </div>
-                                    <div class="absolute bottom-2 right-2 bg-black/80 text-brand-neon text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/40">
-                                        💚 83 FIT
-                                    </div>
-                                </div>
-
-                                <div class="px-1 space-y-1">
-                                    <h4 class="font-bold text-white text-sm">Siemię Lniane</h4>
-                                    <p class="text-[10px] text-gray-400">Dobre na ból brzucha lub gardła, idealne na ciepło.</p>
-                                    
-                                    <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] font-mono">
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-brand-neon">●</span> Białko: 10g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-cyan-400">●</span> Tłuszcz: 12g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-amber-400">●</span> Węgle: 35g
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-black/90 p-1.5 rounded-2xl border border-brand-border grid grid-cols-4 gap-1 text-center text-[10px]">
-                                <div class="bg-brand-darkGreen text-brand-neon p-2 rounded-xl font-bold flex flex-col items-center">
-                                    <i class="fa-solid fa-compass text-xs mb-0.5"></i>
-                                    <span>Odkrywaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-magnifying-glass text-xs mb-0.5"></i>
-                                    <span>Szukaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-cart-shopping text-xs mb-0.5"></i>
-                                    <span>Zakupy</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-user text-xs mb-0.5"></i>
-                                    <span>Profil</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+    <main>
+      <section class="hero" id="home">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Nowa wersja <span id="heroVersionBadge" class="badge">v3.2</span></div>
+            <h1>Jedz lepiej.<br><span class="hero-accent">Gotuj prościej.</span></h1>
+            <p>FitKuchnia to nowoczesna aplikacja kulinarna z praktycznymi przepisami, fit inspiracjami i szybkim dostępem do informacji o posiłkach.</p>
+            <div class="hero-actions">
+              <a class="primary-btn disabled-link" data-apk-link href="#" aria-disabled="true">POBIERZ APK</a>
+              <a class="ghost-btn" href="#about">Zobacz aplikację ↓</a>
             </div>
-        </div>
-    </section>
-
-    <!-- Feature Grid Section -->
-    <section id="funkcje" class="py-20 bg-black/40 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-            
-            <div class="text-center space-y-4">
-                <span class="bg-brand-badgeBg text-brand-badgeText font-mono text-xs px-3 py-1 rounded-full border border-brand-neon/30 uppercase tracking-widest">
-                    Pojemne Moduły Aplikacji
-                </span>
-                <h2 class="text-3xl sm:text-5xl font-black text-white">
-                    Wszystko czego potrzebujesz w <span class="text-brand-neon">Jednym Miejscu</span>
-                </h2>
-                <p class="text-brand-muted max-w-2xl mx-auto text-sm sm:text-base">
-                    Aplikacja projektowana z myślą o maksymalnej wygodzie w kuchni. Od analizy AI po automatyczne listy zakupów.
-                </p>
+            <div class="hero-meta">
+              <span>Android: <strong id="heroAndroid">8.0+</strong></span>
+              <span>Plik: <strong id="heroFileName">FitKuchnia.apk</strong></span>
+              <span>Rozmiar: <strong id="heroFileSize">—</strong></span>
             </div>
+          </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Wspólna Baza w Chmurze</h3>
-                            <span class="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">AKTYWNA</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Połączenie z Google Firebase. Nowe przepisy i zdjęcia są automatycznie synchronizowane na żywo ze wszystkimi Twoimi urządzeniami.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Powiadomienia</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">NOWOŚĆ v3.2</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Aplikacja może informować Cię o nowych aktualizacjach i ważnych zdarzeniach bezpośrednio na telefonie.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-kitchen-set"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Moduł 1: Lodówka & Zero Waste</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AI SEARCH</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Wpisz składniki które posiadasz w lodówce, a AI asystent sprawdzi bazę danych i poda Ci przepisy z naszej bazy danych.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Bezlitosny Korektor AI</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MODUŁ 4</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Zanim Twój przepis trafi do bazy, silnik AI sprawdzi luki logiczne, brakujące czasy, temperatury oraz absurdalne proporcje składników.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Fit Punkty & Odznaki</h3>
-                            <span class="text-[10px] font-mono text-brand-neon bg-black px-2 py-0.5 rounded border border-brand-neon/30">83/100 FIT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Odblokowuj prestiżowe odznaki za zbilansowane dania. Zostań "Ekspertem Zero Waste" lub "Mistrzem Fit Punktów"!
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-calendar-week"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Agregator Zakupów</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AUTOMAT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Planuj posiłki na cały tydzień (Pn-Nd). Aplikacja matematycznie sumuje powtarzające się składniki i przelicza jednostki na wagę w sklepie.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-stopwatch"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Tryb Brudne Ręce</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MINUTNIK</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Włącz aktywny minutnik jednym kliknięciem bez brudzenia ekranu w trakcie gotowania. Asystent poinformuje Cię o wymaganym czasie!
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW SECTION: Dziennik Zmian & Aktualności (Naprawione Błędy) -->
-    <section id="aktualnosci" class="py-16 bg-brand-bg border-t border-brand-border">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center space-y-3 mb-10">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Co nowego i naprawione błędy</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Dziennik Zmian (Wersja 3.2)</h2>
-            </div>
-
-            <div class="bg-brand-card rounded-3xl p-8 border-l-4 border-l-brand-neon border-y border-r border-brand-border space-y-8 shadow-xl">
-                
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border/50 pb-6">
-                    <div class="space-y-1">
-                        <span class="bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                            Aktualizacja Systemowa
-                        </span>
-                        <h3 class="text-2xl font-bold text-white mt-2">Wersja 3.2 jest już dostępna!</h3>
-                        <p class="text-sm text-brand-muted">Pobierz najnowszy plik APK, aby korzystać z poprawek i nowych funkcji wydania 3.2.</p>
-                    </div>
-                    <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon px-6 py-3 rounded-xl text-xs font-bold shrink-0 text-center">
-                        Pobierz Wersję v3.2
-                    </a>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Nowości -->
-                    <div>
-                        <h4 class="text-brand-neon font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa-solid fa-plus-circle"></i> <span>Co nowego?</span>
-                        </h4>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Dodano obsługę <strong>powiadomień w aplikacji</strong>, w tym informacji o nowych aktualizacjach.</span>
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Odświeżono <strong>interfejs aplikacji</strong>, aby korzystanie z niej było jeszcze przyjemniejsze.</span>
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Zachowano i usprawniono dotychczasowe funkcje aplikacji przy aktualizacji do wydania <strong>3.2</strong>.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Naprawione błędy -->
-                    <div>
-                        <h4 class="text-emerald-400 font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa-solid fa-wrench"></i> <span>Naprawione błędy</span>
-                        </h4>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Crash w przepisach.</span> Naprawiono błąd powodujący całkowite wyłączenie aplikacji po wejściu w szczegóły przepisu.
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Problemy z pobieraniem APK.</span> Funkcja pobierania pliku APK została naprawiona.
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Niespodziewane błędy w tle.</span> Poprawiono ogólną stabilność i ograniczono błędy powodujące nieoczekiwane zamykanie aplikacji.
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW SECTION: Formularz Zgłaszania Błędów -->
-    <section id="zglos-blad" class="py-20 border-t border-brand-border bg-brand-bg relative overflow-hidden">
-        <div class="absolute -left-20 -top-20 w-64 h-64 bg-brand-neon/5 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 relative z-10">
-            <div class="text-center space-y-3">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Wsparcie i Rozwój</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Zgłoś Błąd / Wyślij Opinię</h2>
-                <p class="text-brand-muted text-sm">Aplikacja wywala błąd? A może masz pomysł na nową funkcję lub chcesz zostawić opinię? Daj znać bezpośrednio administracji.</p>
-            </div>
-
-            <!-- Formularz korzystający z FormSubmit bez potrzeby backendu -->
-            <form action="https://formsubmit.co/zababiznes2000@gmail.com" method="POST" class="bg-brand-card p-6 sm:p-10 rounded-3xl border border-brand-border space-y-6 shadow-2xl">
-                <!-- Ukryte pola konfiguracyjne dla FormSubmit -->
-                <input type="hidden" name="_subject" value="FitKuchnia - Nowe zgłoszenie od użytkownika!">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label for="name" class="block text-xs font-bold text-gray-300">Imię / Nick</label>
-                        <input type="text" id="name" name="Imie" required placeholder="np. Jan Kowalski" 
-                            class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="email" class="block text-xs font-bold text-gray-300">Adres e-mail (opcjonalnie)</label>
-                        <input type="email" id="email" name="Email" placeholder="np. jan@example.com" 
-                            class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label for="type" class="block text-xs font-bold text-gray-300">Rodzaj zgłoszenia</label>
-                    <select id="type" name="Rodzaj_Zgloszenia" class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all appearance-none">
-                        <option value="Błąd (Bug)">🐞 Znalazłem błąd w aplikacji</option>
-                        <option value="Propozycja">💡 Mam pomysł na nową funkcję</option>
-                        <option value="Opinia">⭐ Chcę dodać opinię na stronę</option>
-                        <option value="Inne">💬 Inne zapytanie</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label for="message" class="block text-xs font-bold text-gray-300">Treść wiadomości *</label>
-                    <textarea id="message" name="Wiadomosc" required rows="5" placeholder="Opisz dokładnie, co poszło nie tak lub prześlij swoją opinię..." 
-                        class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all resize-none"></textarea>
-                </div>
-
-                <button type="submit" class="w-full btn-neon py-4 rounded-xl text-sm font-bold flex justify-center items-center space-x-2">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>Wyślij Zgłoszenie</span>
-                </button>
-                <p class="text-[10px] text-center text-gray-500 mt-4">Wiadomość trafi bezpośrednio do administracji FitKuchni.</p>
-            </form>
-        </div>
-    </section>
-
-    <!-- Instrukcja Instalacji APK -->
-    <section id="instrukcja" class="py-20 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            
-            <div class="text-center space-y-3">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Szybki Start</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Jak zainstalować aplikację na telefonie?</h2>
-                <p class="text-brand-muted max-w-xl mx-auto text-sm">
-                    Prosty proces instalacji z pliku APK dla systemów Android w 4 łatwych krokach.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Step 1 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">1</div>
-                    <h3 class="text-base font-bold text-white">Pobierz plik APK</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Kliknij zielony przycisk <strong>Pobierz FitKuchnia.apk</strong> u góry lub u dołu strony.
-                    </p>
-                </div>
-                <!-- Step 2 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">2</div>
-                    <h3 class="text-base font-bold text-white">Otwórz Pobrane</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Rozwiń pasek powiadomień na telefonie lub przejdź do folderu Pobrane i kliknij w plik `FitKuchnia-v3.2.apk`.
-                    </p>
-                </div>
-                <!-- Step 3 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">3</div>
-                    <h3 class="text-base font-bold text-white">Zezwól na instalację</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Jeśli Android wyświetli komunikat ostrzegawczy, wybierz <em>Ustawienia</em> i włącz opcję <em>Zezwól z tego źródła</em>.
-                    </p>
-                </div>
-                <!-- Step 4 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">4</div>
-                    <h3 class="text-base font-bold text-white">Zainstaluj i Korzystaj</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Kliknij <strong>Zainstaluj</strong>. Po zakończeniu otwórz aplikację i ciesz się inteligentnym asystentem kulinarnym!
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Final CTA Footer -->
-    <footer class="bg-black border-t border-brand-border py-12 text-center text-xs text-brand-muted">
-        <div class="max-w-4xl mx-auto px-4 space-y-6">
-            <div class="flex items-center justify-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black">F</div>
-                <span class="text-xl font-black text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-            </div>
-            <p class="max-w-md mx-auto">
-                Twój inteligentny asystent w kuchni. Wszystkie dane bezpiecznie synchronizowane w chmurze Firebase.
-            </p>
-            <div class="pt-4 border-t border-brand-border/40 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>&copy; 2026 FitKuchnia App. Hosted on GitHub Pages.</div>
-                <div class="flex space-x-4">
-                    <a href="Oto zaktualizowany kod pliku `index (1).html` z podmienionymi linkami:
-
-```html
-<!DOCTYPE html>
-<html lang="pl" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FITKUCHNIA - Oficjalna Aplikacja Kulinarna AI (APK v3.2)</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css)">
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap)" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            bg: '#080b09',
-                            card: '#121814',
-                            border: '#1b261f',
-                            neon: '#00FF66',
-                            neonHover: '#00cc52',
-                            darkGreen: '#042713',
-                            badgeBg: '#06381c',
-                            badgeText: '#34d399',
-                            muted: '#8e9d93',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #080b09;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 255, 102, 0.08) 0%, transparent 60%),
-                linear-gradient(to bottom, rgba(8, 11, 9, 0.9), #080b09);
-        }
-
-        .neon-border {
-            border: 1px solid rgba(0, 255, 102, 0.35);
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.08);
-        }
-
-        .neon-border-glow {
-            border: 1px solid #00FF66;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.35);
-        }
-
-        .btn-neon {
-            background-color: #00FF66;
-            color: #000000;
-            font-weight: 800;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.4);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-neon:hover {
-            background-color: #00e65c;
-            transform: translateY(-2px);
-            box-shadow: 0 0 35px rgba(0, 255, 102, 0.6);
-        }
-
-        .phone-mockup-frame {
-            background: #0d120f;
-            border: 3px solid #1c2a20;
-            border-radius: 36px;
-            box-shadow: 0 25px 60px -15px rgba(0, 255, 102, 0.2);
-        }
-
-        .scroll-custom::-webkit-scrollbar {
-            width: 6px;
-        }
-        .scroll-custom::-webkit-scrollbar-track {
-            background: #0d120f;
-        }
-        .scroll-custom::-webkit-scrollbar-thumb {
-            background: #1c2a20;
-            border-radius: 4px;
-        }
-        .scroll-custom::-webkit-scrollbar-thumb:hover {
-            background: #00FF66;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col selection:bg-brand-neon selection:text-black">
-
-    <!-- Navigation -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-brand-bg/80 border-b border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black text-xl shadow-[0_0_12px_rgba(0,255,102,0.3)]">
-                    F
-                </div>
-                <div>
-                    <span class="text-2xl font-black tracking-wider text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-                    <span class="hidden sm:inline-block ml-2 text-xs font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded-full border border-brand-neon/30">v3.2 APK</span>
-                </div>
-            </div>
-
-            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-gray-300">
-                <a href="#funkcje" class="hover:text-brand-neon transition-colors">Moduły</a>
-                <a href="#aktualnosci" class="hover:text-brand-neon transition-colors">Zmiany (v3.2)</a>
-                <a href="#zglos-blad" class="hover:text-brand-neon transition-colors">Zgłoś błąd</a>
-                <a href="#instrukcja" class="hover:text-brand-neon transition-colors">Instalacja</a>
-            </nav>
-
+          <article class="app-card" aria-label="Informacje o pliku APK">
             <div>
-                <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon px-5 py-2.5 rounded-xl text-sm inline-flex items-center space-x-2">
-                    <i class="fa-solid fa-download"></i>
-                    <span>Pobierz APK</span>
-                </a>
+              <div class="app-card-top">
+                <div class="file-icon">APK</div>
+                <span class="badge" id="appCardBadge">v3.2</span>
+              </div>
+              <div class="app-card-title">
+                <div class="file-name" id="cardFileName">FitKuchnia.apk</div>
+                <h3>Gotowe do pobrania</h3>
+                <p class="muted" style="margin:8px 0 0">Najnowszy plik publikowany z panelu administratora.</p>
+              </div>
+              <div class="specs">
+                <div class="spec"><small>Wersja</small><strong id="cardVersion">3.2</strong></div>
+                <div class="spec"><small>Rozmiar</small><strong id="cardSize">—</strong></div>
+                <div class="spec"><small>Android</small><strong id="cardAndroid">8.0+</strong></div>
+              </div>
             </div>
+            <a class="download-btn app-download disabled-link" data-apk-link href="#" aria-disabled="true" download="FitKuchnia.apk">POBIERZ APK</a>
+            <div class="status-line"><span class="status-dot"></span><span id="downloadStatus">Brak pliku APK — wgraj wersję w panelu Administracja.</span></div>
+          </article>
         </div>
-    </header>
+      </section>
 
-    <!-- Hero Section -->
-    <section class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Hero Left Column -->
-                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
-                    <div class="inline-flex items-center space-x-2 bg-brand-card border border-brand-neon/40 px-4 py-2 rounded-full text-xs font-mono text-brand-neon">
-                        <span class="w-2 h-2 rounded-full bg-brand-neon animate-pulse"></span>
-                        <span>CHMURA FIREBASE: AKTYWNA SYNCHRONIZACJA NA ŻYWO</span>
-                    </div>
-
-                    <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
-                        Inteligentna Aplikacja Kulinarna <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-neon to-emerald-400">Nowej Generacji</span>
-                    </h1>
-
-                    <p class="text-lg text-brand-muted max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                        Gotuj mądrzej z asystentem AI. Łącz warianty przepisów, szukaj po zawartości swojej lodówki, przeliczaj makro na żywo i zbieraj <strong>Fit Punkty</strong>!
-                    </p>
-
-                    <!-- Main Download Box Card -->
-                    <div class="bg-brand-card p-6 sm:p-8 rounded-2xl neon-border-glow relative overflow-hidden text-left max-w-xl mx-auto lg:mx-0">
-                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-neon/10 rounded-full blur-2xl pointer-events-none"></div>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div class="space-y-2">
-                                <div class="flex items-center space-x-2 text-white font-bold text-lg">
-                                    <i class="fa-brands fa-android text-brand-neon text-2xl"></i>
-                                    <span>FitKuchnia.apk</span>
-                                </div>
-                                <p class="text-xs text-brand-muted font-mono">
-                                    Wydanie: 3.2 | Rozmiar APK: ~29 MB | Android 8.0+
-                                </p>
-                                <div class="flex items-center space-x-2 text-xs text-emerald-400">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                    <span>Bezpieczna instalacja bezpośrednia</span>
-                                </div>
-                            </div>
-
-                            <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon text-center w-full sm:w-auto px-8 py-4 rounded-xl text-base flex items-center justify-center space-x-3 shrink-0">
-                                <i class="fa-solid fa-cloud-arrow-down text-xl"></i>
-                                <span>POBIERZ APK</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Right Column: Interactive Phone Mockup -->
-                <div class="lg:col-span-5 flex justify-center">
-                    <div class="phone-mockup-frame w-full max-w-[360px] p-4 relative">
-                        <div class="w-32 h-4 bg-black rounded-full mx-auto mb-4 flex items-center justify-center space-x-2">
-                            <div class="w-3 h-3 rounded-full bg-neutral-900"></div>
-                            <div class="w-10 h-1 bg-neutral-800 rounded-full"></div>
-                        </div>
-
-                        <div class="bg-[#0a0d0a] rounded-[24px] p-4 border border-brand-border space-y-4 text-left font-sans text-xs min-h-[580px] flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center text-gray-400 text-[10px] font-mono border-b border-brand-border/60 pb-2">
-                                    <span>13:09</span>
-                                    <span class="text-brand-neon"><i class="fa-solid fa-wifi"></i> 86% <i class="fa-solid fa-battery-full"></i></span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <div>
-                                        <h3 class="text-white font-black text-lg tracking-wider">FIT<span class="text-brand-neon">KUCHNIA</span></h3>
-                                        <p class="text-[10px] text-gray-400">1 przepisów w telefonie</p>
-                                    </div>
-                                    <div class="bg-brand-neon text-black px-2.5 py-1 rounded-lg font-bold text-[11px] flex items-center space-x-1">
-                                        <i class="fa-solid fa-plus"></i>
-                                        <span>Dodaj</span>
-                                    </div>
-                                </div>
-                                <div class="bg-brand-card border border-brand-neon/30 p-2 rounded-xl flex items-center space-x-2 text-[11px]">
-                                    <span class="w-2 h-2 rounded-full bg-brand-neon"></span>
-                                    <span class="text-gray-300 truncate">Konto: Super Admin (Właściciel)</span>
-                                    <span class="bg-brand-badgeBg text-brand-badgeText text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto">ADMIN</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-brand-card rounded-2xl border border-brand-border overflow-hidden space-y-2 p-2">
-                                <div class="relative h-28 rounded-xl overflow-hidden bg-neutral-900">
-                                    <img src="[https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80](https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80)" alt="Przepis Siemię Lniane" class="w-full h-full object-cover">
-                                    <div class="absolute top-2 left-2 bg-black/80 text-brand-neon text-[9px] px-2 py-0.5 rounded-full font-bold">
-                                        <i class="fa-solid fa-camera"></i> Autorskie zdjęcie
-                                    </div>
-                                    <div class="absolute top-2 right-2 bg-brand-badgeBg/90 text-brand-badgeText text-[9px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/30">
-                                        <i class="fa-solid fa-circle-check"></i> Zatwierdzony
-                                    </div>
-                                    <div class="absolute bottom-2 right-2 bg-black/80 text-brand-neon text-[10px] px-2 py-0.5 rounded-full font-bold border border-brand-neon/40">
-                                        💚 83 FIT
-                                    </div>
-                                </div>
-
-                                <div class="px-1 space-y-1">
-                                    <h4 class="font-bold text-white text-sm">Siemię Lniane</h4>
-                                    <p class="text-[10px] text-gray-400">Dobre na ból brzucha lub gardła, idealne na ciepło.</p>
-                                    
-                                    <div class="grid grid-cols-3 gap-1 pt-1 text-[9px] font-mono">
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-brand-neon">●</span> Białko: 10g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-cyan-400">●</span> Tłuszcz: 12g
-                                        </div>
-                                        <div class="bg-neutral-900/80 p-1 rounded text-center text-gray-300 border border-brand-border">
-                                            <span class="text-amber-400">●</span> Węgle: 35g
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-black/90 p-1.5 rounded-2xl border border-brand-border grid grid-cols-4 gap-1 text-center text-[10px]">
-                                <div class="bg-brand-darkGreen text-brand-neon p-2 rounded-xl font-bold flex flex-col items-center">
-                                    <i class="fa-solid fa-compass text-xs mb-0.5"></i>
-                                    <span>Odkrywaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-magnifying-glass text-xs mb-0.5"></i>
-                                    <span>Szukaj</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-cart-shopping text-xs mb-0.5"></i>
-                                    <span>Zakupy</span>
-                                </div>
-                                <div class="text-gray-400 p-2 rounded-xl flex flex-col items-center hover:text-white">
-                                    <i class="fa-solid fa-user text-xs mb-0.5"></i>
-                                    <span>Profil</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+      <section id="about">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">O aplikacji</div>
+              <h2>FitKuchnia od przepisu do gotowego talerza.</h2>
+              <p>Interfejs jest zaprojektowany tak, aby najważniejsze informacje były czytelne zarówno na telefonie, jak i na komputerze.</p>
             </div>
+          </div>
+          <div class="about-grid">
+            <article class="card copy-card">
+              <span class="badge">Polecane na dziś</span>
+              <p>Przepisy mogą być prezentowane jako szybkie inspiracje, dania wysokobiałkowe, lekkie obiady czy proste śniadania. Każda karta może zawierać ocenę FIT oraz czas przygotowania.</p>
+              <div class="feature-list">
+                <div class="feature"><span class="feature-icon">✓</span><div><strong>Proste przepisy</strong><div class="muted">Najważniejsze informacje w jednym miejscu.</div></div></div>
+                <div class="feature"><span class="feature-icon">⚡</span><div><strong>Szybkie wyszukiwanie</strong><div class="muted">Bez zbędnego przeklikiwania się przez menu.</div></div></div>
+                <div class="feature"><span class="feature-icon">▦</span><div><strong>Aktualizacje aplikacji</strong><div class="muted">Nowe APK można publikować bez edycji kodu.</div></div></div>
+              </div>
+            </article>
+
+            <div class="gallery" aria-label="Galeria potraw">
+              <article class="food-card">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85" alt="Kolorowa miska z warzywami i dodatkami">
+                <div class="food-overlay"><span class="food-name">Bowl warzywny</span><span class="badge">85/100 FIT</span></div>
+              </article>
+              <article class="food-card">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1000&q=85" alt="Zdrowa sałatka z różnymi warzywami">
+                <div class="food-overlay"><span class="food-name">Fresh salad</span><span class="badge neutral">15 min</span></div>
+              </article>
+              <article class="food-card">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85" alt="Miska z kolorowymi składnikami">
+                <div class="food-overlay"><span class="food-name">Protein bowl</span><span class="badge">89/100 FIT</span></div>
+              </article>
+              <article class="food-card">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=900&q=85" alt="Zdrowe składniki i przygotowany posiłek">
+                <div class="food-overlay"><span class="food-name">Fit lunch</span><span class="badge neutral">20 min</span></div>
+              </article>
+              <article class="food-card">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=900&q=85" alt="Zdrowe danie z dużą ilością warzyw">
+                <div class="food-overlay"><span class="food-name">Green plate</span><span class="badge">92/100 FIT</span></div>
+              </article>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <!-- Feature Grid Section -->
-    <section id="funkcje" class="py-20 bg-black/40 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-            
-            <div class="text-center space-y-4">
-                <span class="bg-brand-badgeBg text-brand-badgeText font-mono text-xs px-3 py-1 rounded-full border border-brand-neon/30 uppercase tracking-widest">
-                    Pojemne Moduły Aplikacji
-                </span>
-                <h2 class="text-3xl sm:text-5xl font-black text-white">
-                    Wszystko czego potrzebujesz w <span class="text-brand-neon">Jednym Miejscu</span>
-                </h2>
-                <p class="text-brand-muted max-w-2xl mx-auto text-sm sm:text-base">
-                    Aplikacja projektowana z myślą o maksymalnej wygodzie w kuchni. Od analizy AI po automatyczne listy zakupów.
-                </p>
+      <section id="changelog">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Aktualizacja <span id="changeVersionBadge" class="badge">v3.2</span></div>
+              <h2>Dziennik zmian</h2>
+              <p>Najważniejsze informacje o najnowszej opublikowanej wersji FitKuchni.</p>
             </div>
+            <a class="download-btn disabled-link" data-apk-link href="#" aria-disabled="true" download="FitKuchnia.apk">Pobierz APK</a>
+          </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Wspólna Baza w Chmurze</h3>
-                            <span class="text-[10px] font-mono bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800">AKTYWNA</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Połączenie z Google Firebase. Nowe przepisy i zdjęcia są automatycznie synchronizowane na żywo ze wszystkimi Twoimi urządzeniami.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Powiadomienia</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">NOWOŚĆ v3.2</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Aplikacja może informować Cię o nowych aktualizacjach i ważnych zdarzeniach bezpośrednio na telefonie.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-kitchen-set"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Moduł 1: Lodówka & Zero Waste</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AI SEARCH</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Wpisz składniki które posiadasz w lodówce, a AI asystent sprawdzi bazę danych i poda Ci przepisy z naszej bazy danych.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Bezlitosny Korektor AI</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MODUŁ 4</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Zanim Twój przepis trafi do bazy, silnik AI sprawdzi luki logiczne, brakujące czasy, temperatury oraz absurdalne proporcje składników.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Fit Punkty & Odznaki</h3>
-                            <span class="text-[10px] font-mono text-brand-neon bg-black px-2 py-0.5 rounded border border-brand-neon/30">83/100 FIT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Odblokowuj prestiżowe odznaki za zbilansowane dania. Zostań "Ekspertem Zero Waste" lub "Mistrzem Fit Punktów"!
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-calendar-week"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Agregator Zakupów</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">AUTOMAT</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Planuj posiłki na cały tydzień (Pn-Nd). Aplikacja matematycznie sumuje powtarzające się składniki i przelicza jednostki na wagę w sklepie.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="bg-brand-card p-6 rounded-2xl neon-border hover:border-brand-neon transition-all group space-y-4">
-                    <div class="w-12 h-12 rounded-xl bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-stopwatch"></i>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-bold text-white">Tryb Brudne Ręce</h3>
-                            <span class="text-[10px] font-mono bg-brand-badgeBg text-brand-badgeText px-2 py-0.5 rounded">MINUTNIK</span>
-                        </div>
-                        <p class="text-xs text-brand-muted leading-relaxed">
-                            Włącz aktywny minutnik jednym kliknięciem bez brudzenia ekranu w trakcie gotowania. Asystent poinformuje Cię o wymaganym czasie!
-                        </p>
-                    </div>
-                </div>
-            </div>
+          <div class="change-grid">
+            <article class="card change-card">
+              <div class="change-card-head"><span class="change-icon">+</span><h3>Co nowego?</h3></div>
+              <ul id="newChangesList"></ul>
+            </article>
+            <article class="card change-card fix">
+              <div class="change-card-head"><span class="change-icon">⌁</span><h3>Naprawione błędy</h3></div>
+              <ul id="fixedChangesList"></ul>
+            </article>
+          </div>
+          <div class="version-strip">
+            <div><span class="muted">Opublikowana wersja:</span> <strong id="stripVersion">3.2</strong></div>
+            <div><span class="muted">Minimalny Android:</span> <strong id="stripAndroid">8.0+</strong></div>
+            <div><span class="muted">Plik:</span> <strong id="stripFile">FitKuchnia.apk</strong></div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <!-- NEW SECTION: Dziennik Zmian & Aktualności (Naprawione Błędy) -->
-    <section id="aktualnosci" class="py-16 bg-brand-bg border-t border-brand-border">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center space-y-3 mb-10">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Co nowego i naprawione błędy</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Dziennik Zmian (Wersja 3.2)</h2>
+      <section id="install">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Instrukcja</div>
+              <h2>Pobierz i zainstaluj APK.</h2>
+              <p>Na Androidzie spoza Google Play system może poprosić o dodatkowe potwierdzenie instalacji.</p>
             </div>
+            <a class="download-btn disabled-link" data-apk-link href="#" aria-disabled="true" download="FitKuchnia.apk">Pobierz APK</a>
+          </div>
 
-            <div class="bg-brand-card rounded-3xl p-8 border-l-4 border-l-brand-neon border-y border-r border-brand-border space-y-8 shadow-xl">
-                
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border/50 pb-6">
-                    <div class="space-y-1">
-                        <span class="bg-brand-badgeBg text-brand-badgeText text-xs font-mono px-3 py-1 rounded-full border border-brand-neon/30">
-                            Aktualizacja Systemowa
-                        </span>
-                        <h3 class="text-2xl font-bold text-white mt-2">Wersja 3.2 jest już dostępna!</h3>
-                        <p class="text-sm text-brand-muted">Pobierz najnowszy plik APK, aby korzystać z poprawek i nowych funkcji wydania 3.2.</p>
-                    </div>
-                    <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download type="application/vnd.android.package-archive" class="btn-neon px-6 py-3 rounded-xl text-xs font-bold shrink-0 text-center">
-                        Pobierz Wersję v3.2
-                    </a>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Nowości -->
-                    <div>
-                        <h4 class="text-brand-neon font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa-solid fa-plus-circle"></i> <span>Co nowego?</span>
-                        </h4>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Dodano obsługę <strong>powiadomień w aplikacji</strong>, w tym informacji o nowych aktualizacjach.</span>
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Odświeżono <strong>interfejs aplikacji</strong>, aby korzystanie z niej było jeszcze przyjemniejsze.</span>
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-brand-neon mt-1">●</span>
-                                <span>Zachowano i usprawniono dotychczasowe funkcje aplikacji przy aktualizacji do wydania <strong>3.2</strong>.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Naprawione błędy -->
-                    <div>
-                        <h4 class="text-emerald-400 font-bold mb-4 flex items-center space-x-2">
-                            <i class="fa-solid fa-wrench"></i> <span>Naprawione błędy</span>
-                        </h4>
-                        <ul class="space-y-3 text-sm text-gray-300">
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Crash w przepisach.</span> Naprawiono błąd powodujący całkowite wyłączenie aplikacji po wejściu w szczegóły przepisu.
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Problemy z pobieraniem APK.</span> Funkcja pobierania pliku APK została naprawiona.
-                            </li>
-                            <li class="flex items-start space-x-3">
-                                <span class="text-emerald-500 mt-1">✓</span>
-                                <span class="line-through text-gray-500 mr-1">Niespodziewane błędy w tle.</span> Poprawiono ogólną stabilność i ograniczono błędy powodujące nieoczekiwane zamykanie aplikacji.
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
+          <div class="steps">
+            <article class="step"><div class="step-no">1</div><h3>Kliknij „Pobierz APK”</h3><p>Wybierz dowolny przycisk pobierania na tej stronie — wszystkie wskazują aktualnie opublikowany plik.</p></article>
+            <article class="step"><div class="step-no">2</div><h3>Zezwól na pobranie pliku</h3><p>Jeśli przeglądarka pokaże ostrzeżenie, zapoznaj się z nim i potwierdź pobranie pliku, jeśli ufasz jego źródłu.</p></article>
+            <article class="step"><div class="step-no">3</div><h3>Otwórz plik .apk</h3><p>Po pobraniu kliknij powiadomienie albo otwórz aplikację Menedżer plików / Pobrane i wybierz FitKuchnia.apk.</p></article>
+            <article class="step"><div class="step-no">4</div><h3>Włącz instalowanie z tego źródła</h3><p>Gdy Android zablokuje instalację, wybierz Ustawienia i zezwól przeglądarce na instalowanie aplikacji z tego źródła.</p></article>
+            <article class="step"><div class="step-no">5</div><h3>Zainstaluj i uruchom</h3><p>Kliknij Zainstaluj, poczekaj na zakończenie procesu i uruchom aplikację FitKuchnia.</p></article>
+          </div>
+          <div class="notice">Wskazówka bezpieczeństwa: instaluj APK tylko z zaufanego źródła i przed instalacją upewnij się, że plik pochodzi od autora aplikacji.</div>
         </div>
-    </section>
+      </section>
 
-    <!-- NEW SECTION: Formularz Zgłaszania Błędów -->
-    <section id="zglos-blad" class="py-20 border-t border-brand-border bg-brand-bg relative overflow-hidden">
-        <div class="absolute -left-20 -top-20 w-64 h-64 bg-brand-neon/5 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 relative z-10">
-            <div class="text-center space-y-3">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Wsparcie i Rozwój</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Zgłoś Błąd / Wyślij Opinię</h2>
-                <p class="text-brand-muted text-sm">Aplikacja wywala błąd? A może masz pomysł na nową funkcję lub chcesz zostawić opinię? Daj znać bezpośrednio administracji.</p>
+      <section id="feedback">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">Kontakt</div>
+              <h2>Wyślij opinię albo zgłoś błąd.</h2>
+              <p>Wiadomość zostanie zapisana lokalnie w tej przeglądarce i pojawi się w panelu administracyjnym.</p>
             </div>
-
-            <!-- Formularz korzystający z FormSubmit bez potrzeby backendu -->
-            <form action="[https://formsubmit.co/zababiznes2000@gmail.com](https://formsubmit.co/zababiznes2000@gmail.com)" method="POST" class="bg-brand-card p-6 sm:p-10 rounded-3xl border border-brand-border space-y-6 shadow-2xl">
-                <!-- Ukryte pola konfiguracyjne dla FormSubmit -->
-                <input type="hidden" name="_subject" value="FitKuchnia - Nowe zgłoszenie od użytkownika!">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label for="name" class="block text-xs font-bold text-gray-300">Imię / Nick</label>
-                        <input type="text" id="name" name="Imie" required placeholder="np. Jan Kowalski" 
-                            class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
-                    </div>
-                    <div class="space-y-2">
-                        <label for="email" class="block text-xs font-bold text-gray-300">Adres e-mail (opcjonalnie)</label>
-                        <input type="email" id="email" name="Email" placeholder="np. jan@example.com" 
-                            class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label for="type" class="block text-xs font-bold text-gray-300">Rodzaj zgłoszenia</label>
-                    <select id="type" name="Rodzaj_Zgloszenia" class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all appearance-none">
-                        <option value="Błąd (Bug)">🐞 Znalazłem błąd w aplikacji</option>
-                        <option value="Propozycja">💡 Mam pomysł na nową funkcję</option>
-                        <option value="Opinia">⭐ Chcę dodać opinię na stronę</option>
-                        <option value="Inne">💬 Inne zapytanie</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label for="message" class="block text-xs font-bold text-gray-300">Treść wiadomości *</label>
-                    <textarea id="message" name="Wiadomosc" required rows="5" placeholder="Opisz dokładnie, co poszło nie tak lub prześlij swoją opinię..." 
-                        class="w-full bg-[#0a0d0a] border border-brand-border rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-brand-neon focus:ring-1 focus:ring-brand-neon transition-all resize-none"></textarea>
-                </div>
-
-                <button type="submit" class="w-full btn-neon py-4 rounded-xl text-sm font-bold flex justify-center items-center space-x-2">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>Wyślij Zgłoszenie</span>
-                </button>
-                <p class="text-[10px] text-center text-gray-500 mt-4">Wiadomość trafi bezpośrednio do administracji FitKuchni.</p>
+          </div>
+          <div class="feedback-grid">
+            <article class="card feedback-copy">
+              <span class="badge">85/100 FIT</span>
+              <h3 style="font-size:1.45rem;margin-top:18px">Pomóż rozwijać FitKuchnię.</h3>
+              <p>Opisz problem, zaproponuj zmianę albo oceń aktualną wersję. Formularz działa bez dodatkowego backendu.</p>
+              <div class="small-stat">
+                <span class="badge neutral" id="feedbackCountPublic">0 zapisanych lokalnie</span>
+                <span class="badge neutral">v<span id="feedbackVersionPublic">3.2</span></span>
+              </div>
+            </article>
+            <form class="card form-card" id="feedbackForm">
+              <div class="form-grid">
+                <div class="field"><label for="feedbackName">Imię / Nick *</label><input id="feedbackName" name="name" required maxlength="60" placeholder="np. ZabaBOSS"></div>
+                <div class="field"><label for="feedbackEmail">Adres e-mail *</label><input id="feedbackEmail" name="email" type="email" required maxlength="120" placeholder="ty@example.com"></div>
+                <div class="field"><label for="feedbackCategory">Kategoria *</label><select id="feedbackCategory" name="category" required><option value="Błąd">Błąd</option><option value="Opinia">Opinia</option></select></div>
+                <div class="field"><label>Ocena gwiazdkowa *</label><div class="stars" role="radiogroup" aria-label="Ocena od 1 do 5 gwiazdek">
+                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 gwiazdek">★</label>
+                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 gwiazdki">★</label>
+                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 gwiazdki">★</label>
+                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 gwiazdki">★</label>
+                  <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 gwiazdka">★</label>
+                </div></div>
+                <div class="field full"><label for="feedbackMessage">Treść wiadomości *</label><textarea id="feedbackMessage" name="message" required maxlength="2500" placeholder="Napisz, co działa dobrze albo co warto poprawić..."></textarea></div>
+              </div>
+              <div class="form-actions"><span class="form-message" id="feedbackFormMessage">Wiadomość zostanie zapisana lokalnie.</span><button class="primary-btn" type="submit">Wyślij wiadomość</button></div>
             </form>
+          </div>
         </div>
-    </section>
+      </section>
+    </main>
 
-    <!-- Instrukcja Instalacji APK -->
-    <section id="instrukcja" class="py-20 border-t border-brand-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-            
-            <div class="text-center space-y-3">
-                <span class="text-brand-neon font-mono text-xs uppercase tracking-widest">Szybki Start</span>
-                <h2 class="text-3xl sm:text-4xl font-black text-white">Jak zainstalować aplikację na telefonie?</h2>
-                <p class="text-brand-muted max-w-xl mx-auto text-sm">
-                    Prosty proces instalacji z pliku APK dla systemów Android w 4 łatwych krokach.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Step 1 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">1</div>
-                    <h3 class="text-base font-bold text-white">Pobierz plik APK</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Kliknij zielony przycisk <strong>Pobierz FitKuchnia.apk</strong> u góry lub u dołu strony.
-                    </p>
-                </div>
-                <!-- Step 2 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">2</div>
-                    <h3 class="text-base font-bold text-white">Otwórz Pobrane</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Rozwiń pasek powiadomień na telefonie lub przejdź do folderu Pobrane i kliknij w plik `FitKuchnia-v3.2.apk`.
-                    </p>
-                </div>
-                <!-- Step 3 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">3</div>
-                    <h3 class="text-base font-bold text-white">Zezwól na instalację</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Jeśli Android wyświetli komunikat ostrzegawczy, wybierz <em>Ustawienia</em> i włącz opcję <em>Zezwól z tego źródła</em>.
-                    </p>
-                </div>
-                <!-- Step 4 -->
-                <div class="bg-brand-card p-6 rounded-2xl border border-brand-border space-y-4 relative">
-                    <div class="w-8 h-8 rounded-lg bg-brand-neon text-black font-black flex items-center justify-center text-sm">4</div>
-                    <h3 class="text-base font-bold text-white">Zainstaluj i Korzystaj</h3>
-                    <p class="text-xs text-brand-muted leading-relaxed">
-                        Kliknij <strong>Zainstaluj</strong>. Po zakończeniu otwórz aplikację i ciesz się inteligentnym asystentem kulinarnym!
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Final CTA Footer -->
-    <footer class="bg-black border-t border-brand-border py-12 text-center text-xs text-brand-muted">
-        <div class="max-w-4xl mx-auto px-4 space-y-6">
-            <div class="flex items-center justify-center space-x-2">
-                <div class="w-8 h-8 rounded-lg bg-brand-darkGreen border border-brand-neon flex items-center justify-center text-brand-neon font-black">F</div>
-                <span class="text-xl font-black text-white">FIT<span class="text-brand-neon">KUCHNIA</span></span>
-            </div>
-            <p class="max-w-md mx-auto">
-                Twój inteligentny asystent w kuchni. Wszystkie dane bezpiecznie synchronizowane w chmurze Firebase.
-            </p>
-            <div class="pt-4 border-t border-brand-border/40 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>&copy; 2026 FitKuchnia App. Hosted on GitHub Pages.</div>
-                <div class="flex space-x-4">
-                    <a href="sha256:a6622a03f13d9802110439022acd3a8b5eb1eb63bac9966188816a5ebc579bac" download class="text-brand-neon hover:underline font-bold">Pobierz APK v3.2</a>
-                </div>
-            </div>
-        </div>
+    <footer>
+      <div class="container">FitKuchnia • statyczna strona + panel administracyjny po stronie przeglądarki.</div>
     </footer>
+  </div>
+
+  <div id="adminView" class="admin-view hidden">
+    <header class="admin-header">
+      <div class="container admin-header-row">
+        <div class="admin-brand">FIT<span>KUCHNIA</span> · Panel</div>
+        <button class="ghost-btn" id="backToSiteBtn" type="button">← Wróć na stronę</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <div class="container">
+        <div class="admin-title">
+          <div class="eyebrow">Administracja</div>
+          <h1 style="font-size:clamp(2rem,4vw,3.5rem)">Publikacja aplikacji</h1>
+          <p class="muted" style="max-width:760px;margin:12px 0 0">Przeciągnij plik APK, podaj numer wersji i kliknij „Opublikuj”. Wszystkie przyciski „Pobierz APK” na stronie zostaną od razu połączone z aktualnym plikiem w tej przeglądarce.</p>
+        </div>
+
+        <div class="admin-layout">
+          <section class="card admin-card">
+            <h3>Wgraj nową wersję aplikacji</h3>
+            <p>Metadata i changelog są przechowywane w localStorage, a sam plik APK w IndexedDB.</p>
+
+            <div class="field">
+              <label for="adminPassword">Hasło administratora *</label>
+              <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Domyślnie: 1234">
+            </div>
+
+            <div style="height:11px"></div>
+            <div class="field">
+              <label for="apkFile">Plik APK *</label>
+              <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-controls="apkFile">
+                <div class="cloud" aria-hidden="true">☁</div>
+                <strong>Przeciągnij plik .apk tutaj lub kliknij, aby wybrać</strong>
+                <small>Plik zostanie zapisany lokalnie w pamięci tej przeglądarki.</small>
+                <input id="apkFile" type="file" accept=".apk,application/vnd.android.package-archive" class="sr-only">
+              </div>
+              <div class="file-preview hidden" id="filePreview"><div><strong id="selectedFileName">—</strong><div class="muted" id="selectedFileSize">—</div></div><button class="ghost-btn" id="clearSelectedFile" type="button">Usuń wybór</button></div>
+            </div>
+
+            <div style="height:11px"></div>
+            <div class="admin-row">
+              <div class="field"><label for="adminVersion">Numer wersji *</label><input id="adminVersion" value="3.2" placeholder="np. 3.2"></div>
+              <div class="field"><label for="adminAndroid">Minimalny Android</label><input id="adminAndroid" value="8.0+" placeholder="np. 8.0+"></div>
+            </div>
+
+            <div class="admin-divider"></div>
+            <div class="editor-columns">
+              <div class="field"><label for="adminNewChanges">Co nowego? (1 punkt = 1 linia)</label><textarea id="adminNewChanges" placeholder="Nowy zestaw przepisów\nSzybsze wyszukiwanie"></textarea></div>
+              <div class="field"><label for="adminFixedChanges">Naprawione błędy (1 punkt = 1 linia)</label><textarea id="adminFixedChanges" placeholder="Poprawione filtry\nStabilniejsze otwieranie przepisów"></textarea></div>
+            </div>
+
+            <div class="admin-actions">
+              <button class="primary-btn" id="publishBtn" type="button">Opublikuj / Zapisz zmiany</button>
+              <button class="ghost-btn" id="resetSettingsBtn" type="button">Przywróć wersję domyślną</button>
+            </div>
+            <div class="status-line"><span class="status-dot"></span><span id="adminStatus">Gotowe.</span></div>
+          </section>
+
+          <aside class="card admin-card">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div><h3>Aktualna publikacja</h3><p style="margin-bottom:0">Stan widoczny dla użytkowników tej przeglądarki.</p></div>
+              <span class="badge" id="adminCurrentVersion">v3.2</span>
+            </div>
+            <div class="version-strip" style="margin-top:17px;display:grid;grid-template-columns:1fr 1fr">
+              <div><span class="muted">APK</span><br><strong id="adminCurrentFile">Brak pliku</strong></div>
+              <div><span class="muted">Rozmiar</span><br><strong id="adminCurrentSize">—</strong></div>
+              <div><span class="muted">Android</span><br><strong id="adminCurrentAndroid">8.0+</strong></div>
+              <div><span class="muted">Opinie</span><br><strong id="adminCurrentFeedback">0</strong></div>
+            </div>
+            <div class="admin-actions">
+              <button class="ghost-btn danger" id="deleteApkBtn" type="button">Usuń zapisany APK</button>
+            </div>
+
+            <div class="admin-divider"></div>
+            <h3>Odebrane opinie i zgłoszenia</h3>
+            <p>Rekordy pochodzą z localStorage tej przeglądarki.</p>
+            <div class="admin-actions" style="margin-top:0"><button class="ghost-btn danger" id="clearFeedbackBtn" type="button">Usuń wszystkie</button></div>
+            <div class="feedback-list" id="adminFeedbackList" style="margin-top:12px"></div>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (function(){
+      'use strict';
+
+      const STORAGE_KEY = 'fitkuchnia-settings-v1';
+      const FEEDBACK_KEY = 'fitkuchnia-feedback-v1';
+      const DEFAULTS = {
+        version: '3.2',
+        android: '8.0+',
+        fileName: 'FitKuchnia.apk',
+        size: '',
+        newChanges: [
+          'Nowoczesny panel aktualizacji APK',
+          'Odświeżony interfejs FitKuchnia',
+          'Czytelniejsze karty przepisów'
+        ],
+        fixedChanges: [
+          'Poprawione drobne problemy z nawigacją',
+          'Stabilniejsze zapisywanie ustawień lokalnych',
+          'Poprawiona responsywność formularzy'
+        ]
+      };
+
+      let currentSettings = loadSettings();
+      let selectedFile = null;
+      let objectUrl = null;
+      let dbPromise = null;
+
+      const $ = (sel, root=document) => root.querySelector(sel);
+      const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+      function loadSettings(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? {...DEFAULTS, ...JSON.parse(raw)} : structuredClone(DEFAULTS);
+        }catch(e){
+          return structuredClone(DEFAULTS);
+        }
+      }
+
+      function saveSettings(){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSettings));
+      }
+
+      function getFeedback(){
+        try{return JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]')}catch(e){return []}
+      }
+
+      function saveFeedback(list){
+        localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
+      }
+
+      function formatBytes(bytes){
+        if(!bytes && bytes !== 0) return '—';
+        if(bytes === 0) return '0 B';
+        const units=['B','KB','MB','GB'];
+        const i=Math.floor(Math.log(bytes)/Math.log(1024));
+        return `${(bytes/Math.pow(1024,i)).toFixed(i ? 2 : 0)} ${units[i]}`;
+      }
+
+      function showToast(message, type='success'){
+        const el=document.createElement('div');
+        el.className='toast ' + type;
+        el.textContent=message;
+        $('#toastWrap').appendChild(el);
+        setTimeout(()=>el.remove(), 3600);
+      }
+
+      function setDownloadState(hasApk, url, fileName){
+        $$('[data-apk-link]').forEach(link=>{
+          if(hasApk){
+            link.href=url;
+            link.download=fileName || 'FitKuchnia.apk';
+            link.classList.remove('disabled-link');
+            link.removeAttribute('aria-disabled');
+            link.dataset.ready='1';
+          }else{
+            link.href='#';
+            link.removeAttribute('download');
+            link.classList.add('disabled-link');
+            link.setAttribute('aria-disabled','true');
+            link.dataset.ready='0';
+          }
+        });
+        $('#downloadStatus').textContent = hasApk
+          ? `Aktywny plik: ${fileName || 'FitKuchnia.apk'} — gotowy do pobrania.`
+          : 'Brak pliku APK — wgraj wersję w panelu Administracja.';
+      }
+
+      function renderChangeList(target, items, fallback){
+        const ul=$(target);
+        ul.innerHTML='';
+        const list=(Array.isArray(items)&&items.length?items:fallback).filter(Boolean);
+        list.forEach(text=>{
+          const li=document.createElement('li');
+          li.textContent=text;
+          ul.appendChild(li);
+        });
+      }
+
+      function renderPublic(){
+        const s=currentSettings;
+        const version=s.version || DEFAULTS.version;
+        const android=s.android || DEFAULTS.android;
+        const fileName=s.fileName || DEFAULTS.fileName;
+        const size=s.size || '—';
+
+        $('#heroVersionBadge').textContent='v'+version;
+        $('#appCardBadge').textContent='v'+version;
+        $('#changeVersionBadge').textContent='v'+version;
+        $('#cardVersion').textContent=version;
+        $('#stripVersion').textContent=version;
+        $('#heroAndroid').textContent=android;
+        $('#cardAndroid').textContent=android;
+        $('#stripAndroid').textContent=android;
+        $('#heroFileName').textContent=fileName;
+        $('#cardFileName').textContent=fileName;
+        $('#stripFile').textContent=fileName;
+        $('#heroFileSize').textContent=size;
+        $('#cardSize').textContent=size;
+        $('#feedbackVersionPublic').textContent=version;
+
+        renderChangeList('#newChangesList',s.newChanges,DEFAULTS.newChanges);
+        renderChangeList('#fixedChangesList',s.fixedChanges,DEFAULTS.fixedChanges);
+
+        const feedbackCount=getFeedback().length;
+        $('#feedbackCountPublic').textContent=`${feedbackCount} zapisanych lokalnie`;
+      }
+
+      function renderAdmin(){
+        const s=currentSettings;
+        $('#adminVersion').value=s.version || DEFAULTS.version;
+        $('#adminAndroid').value=s.android || DEFAULTS.android;
+        $('#adminNewChanges').value=(s.newChanges || []).join('\n');
+        $('#adminFixedChanges').value=(s.fixedChanges || []).join('\n');
+        $('#adminCurrentVersion').textContent='v'+(s.version || DEFAULTS.version);
+        $('#adminCurrentFile').textContent=s.fileName || 'Brak pliku';
+        $('#adminCurrentSize').textContent=s.size || '—';
+        $('#adminCurrentAndroid').textContent=s.android || DEFAULTS.android;
+        const count=getFeedback().length;
+        $('#adminCurrentFeedback').textContent=count;
+        renderFeedbackAdmin();
+      }
+
+      function renderFeedbackAdmin(){
+        const list=getFeedback();
+        const host=$('#adminFeedbackList');
+        host.innerHTML='';
+        if(!list.length){
+          host.innerHTML='<div class="empty-state">Brak zapisanych wiadomości.</div>';
+          return;
+        }
+        [...list].reverse().forEach(item=>{
+          const card=document.createElement('article');
+          card.className='feedback-item';
+          const stars='★'.repeat(Number(item.rating)||0)+'☆'.repeat(5-(Number(item.rating)||0));
+          card.innerHTML=`
+            <div class="feedback-item-head">
+              <div><strong>${escapeHtml(item.name)}</strong><div class="feedback-meta">${escapeHtml(item.email)} · ${escapeHtml(item.category)} · ${escapeHtml(item.date)}</div></div>
+              <span style="color:#ffd257;letter-spacing:.05em">${stars}</span>
+            </div>
+            <div class="feedback-text">${escapeHtml(item.message)}</div>
+            <div class="feedback-item-actions"><button class="ghost-btn danger" type="button" data-delete-feedback="${item.id}">Usuń</button></div>`;
+          host.appendChild(card);
+        });
+      }
+
+      function escapeHtml(str){
+        return String(str ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      }
+
+      function openDb(){
+        if(dbPromise) return dbPromise;
+        dbPromise=new Promise((resolve,reject)=>{
+          if(!('indexedDB' in window)) return reject(new Error('IndexedDB niedostępne'));
+          const request=indexedDB.open('fitkuchnia-db',1);
+          request.onupgradeneeded=()=>{
+            const db=request.result;
+            if(!db.objectStoreNames.contains('apk')) db.createObjectStore('apk');
+          };
+          request.onsuccess=()=>resolve(request.result);
+          request.onerror=()=>reject(request.error);
+        });
+        return dbPromise;
+      }
+
+      async function setApkBlob(blob){
+        const db=await openDb();
+        return new Promise((resolve,reject)=>{
+          const tx=db.transaction('apk','readwrite');
+          tx.objectStore('apk').put(blob,'current');
+          tx.oncomplete=resolve;
+          tx.onerror=()=>reject(tx.error);
+        });
+      }
+
+      async function getApkBlob(){
+        try{
+          const db=await openDb();
+          return await new Promise((resolve,reject)=>{
+            const tx=db.transaction('apk','readonly');
+            const req=tx.objectStore('apk').get('current');
+            req.onsuccess=()=>resolve(req.result || null);
+            req.onerror=()=>reject(req.error);
+          });
+        }catch(e){return null}
+      }
+
+      async function deleteApkBlob(){
+        const db=await openDb();
+        return new Promise((resolve,reject)=>{
+          const tx=db.transaction('apk','readwrite');
+          tx.objectStore('apk').delete('current');
+          tx.oncomplete=resolve;
+          tx.onerror=()=>reject(tx.error);
+        });
+      }
+
+      async function refreshApkLink(){
+        if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null}
+        const blob=await getApkBlob();
+        if(blob instanceof Blob){
+          objectUrl=URL.createObjectURL(blob);
+          setDownloadState(true,objectUrl,currentSettings.fileName || 'FitKuchnia.apk');
+          return true;
+        }
+        setDownloadState(false,'#',currentSettings.fileName);
+        return false;
+      }
+
+      function showSite(){
+        $('#adminView').classList.add('hidden');
+        $('#siteView').classList.remove('hidden');
+        window.scrollTo({top:0,behavior:'instant'});
+        history.replaceState(null,'',location.pathname+location.search+'#home');
+      }
+
+      function showAdmin(){
+        $('#siteView').classList.add('hidden');
+        $('#adminView').classList.remove('hidden');
+        renderAdmin();
+        window.scrollTo({top:0,behavior:'instant'});
+        history.replaceState(null,'',location.pathname+location.search+'#admin');
+      }
+
+      function updateSelectedFilePreview(){
+        const preview=$('#filePreview');
+        if(!selectedFile){preview.classList.add('hidden');return}
+        $('#selectedFileName').textContent=selectedFile.name;
+        $('#selectedFileSize').textContent=formatBytes(selectedFile.size);
+        preview.classList.remove('hidden');
+      }
+
+      function selectFile(file){
+        if(!file) return;
+        if(!/\.apk$/i.test(file.name)){
+          showToast('Wybierz plik z rozszerzeniem .apk.','error');
+          return;
+        }
+        selectedFile=file;
+        updateSelectedFilePreview();
+        showToast('Wybrano plik APK.');
+      }
+
+      function handleDownloadClick(e){
+        const link=e.currentTarget;
+        if(link.dataset.ready!=='1'){
+          e.preventDefault();
+          showToast('Najpierw wgraj plik APK w panelu Administracja.','error');
+        }
+      }
+
+      // Public download links
+      $$('[data-apk-link]').forEach(link=>link.addEventListener('click',handleDownloadClick));
+
+      // Navigation
+      $('#openAdminBtn').addEventListener('click',showAdmin);
+      $('#backToSiteBtn').addEventListener('click',showSite);
+
+      // Admin file picker and DnD
+      const dropzone=$('#dropzone');
+      const apkInput=$('#apkFile');
+      dropzone.addEventListener('click',()=>apkInput.click());
+      dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();apkInput.click()}});
+      ['dragenter','dragover'].forEach(type=>dropzone.addEventListener(type,e=>{e.preventDefault();dropzone.classList.add('dragover')}));
+      ['dragleave','drop'].forEach(type=>dropzone.addEventListener(type,e=>{e.preventDefault();dropzone.classList.remove('dragover')}));
+      dropzone.addEventListener('drop',e=>selectFile(e.dataTransfer.files?.[0]));
+      apkInput.addEventListener('change',e=>selectFile(e.target.files?.[0]));
+      $('#clearSelectedFile').addEventListener('click',()=>{selectedFile=null;apkInput.value='';updateSelectedFilePreview()});
+
+      // Publish
+      $('#publishBtn').addEventListener('click',async()=>{
+        const pass=$('#adminPassword').value;
+        if(pass!=='1234'){
+          $('#adminStatus').textContent='Nieprawidłowe hasło administratora.';
+          showToast('Nieprawidłowe hasło administratora.','error');
+          return;
+        }
+        const version=$('#adminVersion').value.trim();
+        const android=$('#adminAndroid').value.trim() || DEFAULTS.android;
+        if(!version){showToast('Podaj numer wersji.','error');return}
+        if(!/^\d+(\.\d+){0,3}([\-_a-zA-Z0-9.]*)$/.test(version)){
+          showToast('Numer wersji ma nieprawidłowy format.','error');return;
+        }
+
+        try{
+          if(selectedFile){
+            await setApkBlob(selectedFile);
+            currentSettings.fileName=selectedFile.name;
+            currentSettings.size=formatBytes(selectedFile.size);
+          }
+          currentSettings.version=version;
+          currentSettings.android=android;
+          currentSettings.newChanges=$('#adminNewChanges').value.split('\n').map(s=>s.trim()).filter(Boolean);
+          currentSettings.fixedChanges=$('#adminFixedChanges').value.split('\n').map(s=>s.trim()).filter(Boolean);
+          saveSettings();
+          renderPublic();
+          renderAdmin();
+          await refreshApkLink();
+          $('#adminStatus').textContent=`Zapisano v${version}.`;
+          showToast(`FitKuchnia v${version} została opublikowana w tej przeglądarce.`);
+        }catch(err){
+          console.error(err);
+          showToast('Nie udało się zapisać pliku APK. Sprawdź, czy przeglądarka obsługuje IndexedDB.','error');
+        }
+      });
+
+      // Reset metadata
+      $('#resetSettingsBtn').addEventListener('click',()=>{
+        currentSettings=structuredClone(DEFAULTS);
+        saveSettings();
+        renderPublic();
+        renderAdmin();
+        refreshApkLink();
+        showToast('Przywrócono domyślne ustawienia tekstowe.','success');
+      });
+
+      // Delete stored APK
+      $('#deleteApkBtn').addEventListener('click',async()=>{
+        if($('#adminPassword').value!=='1234'){
+          showToast('Wpisz poprawne hasło administratora.','error');
+          return;
+        }
+        try{
+          await deleteApkBlob();
+          currentSettings.fileName=DEFAULTS.fileName;
+          currentSettings.size='';
+          saveSettings();
+          await refreshApkLink();
+          renderPublic();
+          renderAdmin();
+          showToast('Zapisany APK został usunięty.');
+        }catch(e){showToast('Nie udało się usunąć APK.','error')}
+      });
+
+      // Feedback form
+      $('#feedbackForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        const form=e.currentTarget;
+        const data=new FormData(form);
+        const rating=form.querySelector('input[name="rating"]:checked')?.value;
+        if(!rating){
+          $('#feedbackFormMessage').textContent='Wybierz ocenę gwiazdkową.';
+          showToast('Wybierz ocenę gwiazdkową.','error');
+          return;
+        }
+        const entry={
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+          name:String(data.get('name')||'').trim(),
+          email:String(data.get('email')||'').trim(),
+          category:String(data.get('category')||'Opinia'),
+          rating:Number(rating),
+          message:String(data.get('message')||'').trim(),
+          date:new Intl.DateTimeFormat('pl-PL',{dateStyle:'medium',timeStyle:'short'}).format(new Date())
+        };
+        const list=getFeedback();
+        list.push(entry);
+        saveFeedback(list);
+        form.reset();
+        $('#feedbackFormMessage').textContent='Wiadomość została zapisana lokalnie.';
+        renderPublic();
+        renderAdmin();
+        showToast('Dziękujemy! Wiadomość została zapisana.');
+      });
+
+      $('#adminFeedbackList').addEventListener('click',e=>{
+        const btn=e.target.closest('[data-delete-feedback]');
+        if(!btn) return;
+        const id=btn.dataset.deleteFeedback;
+        const filtered=getFeedback().filter(item=>item.id!==id);
+        saveFeedback(filtered);
+        renderAdmin();
+        renderPublic();
+        showToast('Wiadomość została usunięta.');
+      });
+
+      $('#clearFeedbackBtn').addEventListener('click',()=>{
+        if($('#adminPassword').value!=='1234'){
+          showToast('Wpisz poprawne hasło administratora.','error');
+          return;
+        }
+        if(!getFeedback().length){showToast('Lista jest już pusta.');return}
+        if(!confirm('Usunąć wszystkie opinie i zgłoszenia zapisane w tej przeglądarce?')) return;
+        saveFeedback([]);
+        renderAdmin();
+        renderPublic();
+        showToast('Wyczyszczono listę wiadomości.');
+      });
+
+      // Allow Enter in admin password to publish
+      $('#adminPassword').addEventListener('keydown',e=>{if(e.key==='Enter') $('#publishBtn').click()});
+
+      // Keep hash-based admin view on refresh
+      async function init(){
+        renderPublic();
+        renderAdmin();
+        await refreshApkLink();
+        const isAdmin=location.hash==='#admin';
+        if(isAdmin) showAdmin();
+
+        // Smooth navigation while staying in site view
+        $$('a[href^="#"]', $('#siteView')).forEach(a=>a.addEventListener('click',e=>{
+          if(a.classList.contains('disabled-link')) return;
+          const id=a.getAttribute('href');
+          if(id && id!=='#'){
+            setTimeout(()=>history.replaceState(null,'',location.pathname+location.search+id),0);
+          }
+        }));
+      }
+
+      init();
+    })();
+  </script>
 </body>
 </html>
-```
