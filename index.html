@@ -616,11 +616,31 @@
       getDownloadURL,
       deleteObject
     } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-storage.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
     (async function(){
       'use strict';
 
-      const ADMIN_CODE = 'sonmhc-ex5';
+      // UWAGA - PRZYCZYNA BŁĘDU:
+      // Wcześniej panel admina był zabezpieczony WYŁĄCZNIE tym stringiem po stronie
+      // przeglądarki. Firebase (Storage i Firestore) nic o nim nie wie i nie może go
+      // zweryfikować, więc jedyny sposób, żeby zapis (uploadBytes / setDoc) w ogóle
+      // przeszedł, to otwarcie reguł na "allow write: if true" — czyli każdy odwiedzający
+      // (nie tylko admin) mógłby wysyłać/kasować pliki. Jeśli reguły są zamiast tego
+      // zamknięte (co jest zdecydowanie bardziej prawdopodobne — domyślny "test mode"
+      // w konsoli Firebase wygasa po 30 dniach i wtedy WSZYSTKO jest blokowane), to właśnie
+      // to powoduje oba opisane problemy: upload "wisi"/kończy się błędem, a strona
+      // publiczna nie może odczytać dokumentu z linkiem do APK ("brak pliku APK",
+      // "źle skonfigurowany Firebase").
+      // Poniższy kod dodaje prawdziwe uwierzytelnienie Firebase Auth (e-mail/hasło) dla
+      // admina, dzięki czemu reguły mogą bezpiecznie wymagać `request.auth != null` przy
+      // zapisie, a jednocześnie zwykli użytkownicy mogą swobodnie CZYTAĆ dane publikacji.
+      const ADMIN_CODE = 'sonymhc-ex5';
+      const ADMIN_EMAIL = 'zababiznes2000@gmail.com'; // to konto musi istnieć w Firebase Auth (patrz instrukcja)
       const RELEASE_DOC = ['fitkuchnia', 'release'];
       const FEEDBACK_COLLECTION = 'fitkuchnia_feedback';
 
@@ -673,6 +693,7 @@
       let firebaseReady = false;
       let db = null;
       let storage = null;
+      let auth = null;
 
       const $ = (sel, root=document) => root.querySelector(sel);
       const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
@@ -743,6 +764,7 @@
           const app = getApps().length ? getApps()[0] : initializeApp(config);
           db = getFirestore(app);
           storage = getStorage(app);
+          auth = getAuth(app);
           firebaseReady = true;
           $('#adminStatus').textContent = `Firebase: połączono z projektem ${config.projectId}.`;
           return true;
@@ -920,6 +942,8 @@
       }
 
       function verifyAdminCode(){
+        // Szybka, lokalna weryfikacja UI (odblokowuje dropzone/pola formularza).
+        // To NIE jest zabezpieczenie — prawdziwa autoryzacja happens w ensureAdminAuth().
         const value = $('#adminPassword').value;
         if(value !== ADMIN_CODE){
           adminUnlocked = false;
@@ -935,12 +959,35 @@
         return true;
       }
 
-      async function publishRelease(){
-        if(!verifyAdminCode()) return;
-        if(!firebaseReady){
-          showToast('Najpierw skonfiguruj Firebase.', 'error');
-          return;
+      // Prawdziwa autoryzacja wobec Firebase — to jej sprawdzają Security Rules.
+      // Loguje się do Firebase Auth kontem admina, używając wpisanego kodu jako hasła.
+      // Wywoływana tuż przed każdą operacją zapisu/kasowania w Storage/Firestore.
+      async function ensureAdminAuth(){
+        if(!verifyAdminCode()) return false;
+        if(!firebaseReady || !auth){
+          showToast('Firebase nie jest skonfigurowany.', 'error');
+          return false;
         }
+        if(auth.currentUser) return true;
+        try{
+          $('#adminStatus').textContent = 'Logowanie do Firebase…';
+          await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_CODE);
+          $('#adminStatus').textContent = 'Zalogowano. Możesz publikować zmiany do Firebase.';
+          return true;
+        }catch(error){
+          console.error(error);
+          adminUnlocked = false;
+          const msg = (error?.code === 'auth/invalid-credential' || error?.code === 'auth/wrong-password' || error?.code === 'auth/user-not-found')
+            ? 'Konto administratora nie istnieje lub hasło jest inne niż w Firebase Auth.'
+            : 'Nie udało się zalogować do Firebase (' + (error?.code || 'nieznany błąd') + ').';
+          $('#adminStatus').textContent = msg;
+          showToast(msg, 'error');
+          return false;
+        }
+      }
+
+      async function publishRelease(){
+        if(!(await ensureAdminAuth())) return;
 
         const version = $('#adminVersion').value.trim();
         const android = $('#adminAndroid').value.trim() || DEFAULTS.android;
@@ -1019,11 +1066,7 @@
       }
 
       async function deletePublishedApk(){
-        if(!verifyAdminCode()) return;
-        if(!firebaseReady){
-          showToast('Firebase nie jest skonfigurowany.', 'error');
-          return;
-        }
+        if(!(await ensureAdminAuth())) return;
         if(!currentSettings.storagePath){
           showToast('Brak opublikowanego pliku do usunięcia.');
           return;
@@ -1157,8 +1200,7 @@
       }
 
       async function deleteFeedback(id){
-        if(!verifyAdminCode()) return;
-        if(!firebaseReady) return;
+        if(!(await ensureAdminAuth())) return;
         try{
           await deleteDoc(doc(db, FEEDBACK_COLLECTION, id));
           showToast('Wiadomość została usunięta z Firestore.');
@@ -1201,6 +1243,7 @@
           $('#adminStatus').textContent = firebaseReady
             ? 'Kod poprawny. Panel administratora jest odblokowany.'
             : 'Kod poprawny, ale Firebase nie jest skonfigurowany.';
+          if(firebaseReady) ensureAdminAuth().then(ok => { if(ok) listenForFeedback(); });
         }else{
           adminUnlocked = false;
         }
@@ -1270,8 +1313,7 @@
       });
 
       $('#clearFeedbackBtn').addEventListener('click', async () => {
-        if(!verifyAdminCode()) return;
-        if(!firebaseReady) return;
+        if(!(await ensureAdminAuth())) return;
         if(!confirm('Usunąć wszystkie wiadomości z Cloud Firestore?')) return;
         try{
           const snapshot = await getDocs(collection(db, FEEDBACK_COLLECTION));
@@ -1297,7 +1339,6 @@
         if(ready){
           await loadReleaseOnce();
           listenForRelease();
-          listenForFeedback();
           updateDownloadLinks();
         }else{
           updateDownloadLinks();
